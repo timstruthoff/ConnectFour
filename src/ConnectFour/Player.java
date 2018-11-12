@@ -3,6 +3,7 @@ package ConnectFour;
 public class Player {
     private String name;
     private String ipAddress;
+    private int port;
 
     public Player(String pName){
         name = pName;
@@ -22,6 +23,14 @@ public class Player {
 
     public String getIpAddress(){
         return ipAddress;
+    }
+    
+    public void setPort(int pPort) {
+        port = pPort;
+    }
+
+    public int getPort(){
+        return port;
     }
     
 }
