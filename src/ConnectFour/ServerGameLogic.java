@@ -11,6 +11,7 @@ package ConnectFour;
  */
 public class ServerGameLogic {
 
+    private GameServer gameServer;
     private int numberOfColumns = 7;
     private int numberOfRows = 7;
     private String[][] playingField = new String[numberOfColumns][7];
@@ -23,8 +24,17 @@ public class ServerGameLogic {
     private int numberOfMarks;
     private String gameResult;
 
-    public void checkForGameEnd() {
-        boolean won = false;
+    public ServerGameLogic(GameServer pGameServer) {
+        gameServer = pGameServer;
+    }
+
+    /**
+     * Checks if the game has ended and then returns the winner
+     *
+     * @return Boolean indicating whether the game has ended.
+     */
+    public boolean hasGameEnded() {
+        boolean ended = false;
 
         for (int row = 0; row < 7; row++) {
             for (int position = 0; position < 4; position++) {
@@ -35,13 +45,13 @@ public class ServerGameLogic {
                 String mark4 = playingField[position + 3][row];
 
                 if (mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
-                    won = true;
+                    ended = true;
                     break;
                 }
             }
         }
 
-        if (won == false) {
+        if (ended == false) {
             for (int column = 0; column < 7; column++) {
                 for (int position = 0; position < 4; position++) {
 
@@ -51,14 +61,14 @@ public class ServerGameLogic {
                     String mark4 = playingField[column][position + 3];
 
                     if (mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
-                        won = true;
+                        ended = true;
                         break;
                     }
                 }
             }
         }
 
-        if (won == false) {
+        if (ended == false) {
             for (int column = 0; column < 7; column++) {
                 for (int row = 0; row < 7; row++) {
                     if (column + 3 < 7 && row + 3 < 7) {
@@ -68,7 +78,7 @@ public class ServerGameLogic {
                         String mark4 = playingField[column + 3][row + 3];
 
                         if (mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
-                            won = true;
+                            ended = true;
                             break;
                         }
                     }
@@ -77,7 +87,7 @@ public class ServerGameLogic {
 
         }
 
-        if (won == false) {
+        if (ended == false) {
             for (int column = 6; column >= 0; column--) {
                 for (int row = 6; row >= 0; row--) {
                     if (column - 3 >= 0 && row - 3 >= 0) {
@@ -87,7 +97,7 @@ public class ServerGameLogic {
                         String mark4 = playingField[column - 3][row - 3];
 
                         if (mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
-                            won = true;
+                            ended = true;
                             break;
                         }
                     }
@@ -95,7 +105,8 @@ public class ServerGameLogic {
             }
 
         }
-        this.gameEnd(won);
+
+        return ended;
     }
 
     /**
@@ -124,39 +135,34 @@ public class ServerGameLogic {
             }
 
             numberOfMarks++;
-            this.switchPlayers();
         } else {
             System.err.println("Fehler bei Zeichensetzen: Feld schon markiert");
         }
 
     }
-    
+
     /**
      * Puts a chip on the top position in a column.
-     * @param pPlayerNumber The number of the player for whom the chip should be dropped (0 or 1).
-     * @param pColumn The number of the column in which the chip should be dropped.
+     *
+     * @param pPlayerNumber The number of the player for whom the chip should be
+     * dropped (0 or 1).
+     * @param pColumn The number of the column in which the chip should be
+     * dropped.
      */
     public void drop(int pPlayerNumber, int pColumn) {
         if (!isColumnFull(pColumn)) {
-            
+
             // Calculate the position of the dropped chip.
             int row = numberOfRows - 1 - numberOfChipsInColumn[pColumn];
 
             // Change the fill color at that position.
             this.setMark(pPlayerNumber, pColumn, row);
-            
+
             // Increase the number of chips in that column.
             numberOfChipsInColumn[pColumn]++;
-        }
-    }
-
-    public void switchPlayers() {
-        if (currentPlayer == playerOne) {
-            currentPlayer = playerTwo;
-        } else if (currentPlayer == playerTwo) {
-            currentPlayer = playerOne;
-        } else {
-            System.err.println("Error while switching palyers: No current player!");
+            
+            // Notify game server of successful drop
+            gameServer.playerDroppedHandler(pPlayerNumber, pColumn, row);
         }
     }
 
@@ -170,6 +176,16 @@ public class ServerGameLogic {
                 gameResult = "The game is over! Draw, there is no winner!";
             }
 
+        }
+    }
+
+    public void switchPlayers() {
+        if (currentPlayer == playerOne) {
+            currentPlayer = playerTwo;
+        } else if (currentPlayer == playerTwo) {
+            currentPlayer = playerOne;
+        } else {
+            System.err.println("Error while switching palyers: No current player!");
         }
     }
 
@@ -198,7 +214,7 @@ public class ServerGameLogic {
         } else {
             System.err.println("Error adding player: Game is full!");
         }
-        
+
     }
 
     /**
@@ -232,11 +248,12 @@ public class ServerGameLogic {
     public boolean isColumnFull(int pColumn) {
         return numberOfChipsInColumn[pColumn] >= numberOfRows;
     }
-    
+
     /**
      * Gets a player by the ip address.
+     *
      * @param pIpAddress The ip address of player.
-     * @return 
+     * @return
      */
     public Player getPlayerByIpAddress(String pIpAddress) {
         if (playerOne.getIpAddress().equals(pIpAddress)) {
@@ -247,16 +264,48 @@ public class ServerGameLogic {
             return null;
         }
     }
-    
-    public int getNumberOfPlayer (Player pPlayer) {
+
+    /**
+     * Gets the number of the supplied player object.
+     * @param pPlayer A player object.
+     * @return The number: Either 0 or 1
+     */
+    public int getNumberOfPlayer(Player pPlayer) {
         if (pPlayer == playerOne) {
             return 0;
-        } else if(pPlayer == playerTwo){
+        } else if (pPlayer == playerTwo) {
             return 1;
         }
         // Player is neither one nor two, thus invalid.
         return -1;
+    }
     
-       
+    /**
+     * Returns a player object with a number.
+     * @param pPlayerNumber
+     * @return 
+     */
+    public Player getPlayerByNumber(int pPlayerNumber) {
+        switch(pPlayerNumber) {
+            case 0:
+                return playerOne;
+            case 1:
+                return playerTwo;
+            default:
+                System.err.println("Invalid player number!");
+        }
+        return null;
+    }
+    
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+    
+    public Player getOtherPlayer() {
+        if (currentPlayer == playerOne) {
+            return playerTwo;
+        } else {
+            return playerOne;   
+        }
     }
 }

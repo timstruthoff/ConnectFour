@@ -9,8 +9,9 @@ import EgJavaLib2.netzwerk.*;
  * @version (a version number or a date)
  */
 public class GameServer extends Server {
-
-    ServerGameLogic servergamelogic = new ServerGameLogic();
+    
+    // NOTE: circular reference not used yet.
+    ServerGameLogic servergamelogic = new ServerGameLogic(this);
 
     /**
      * Constructor for objects of class SpielServer
@@ -52,15 +53,16 @@ public class GameServer extends Server {
                 break;
         }
     }
-    
+
     /**
      * Process start messages from the client.
+     *
      * @param pClientIP
-     * @param pClientPort 
+     * @param pClientPort
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
         int playerNumber = servergamelogic.getNumberOfPlayers();
-        
+
         // Check how many players are already on the server.
         if (playerNumber > 2) {
             this.send(pClientIP, pClientPort, "ERR Game full");
@@ -70,12 +72,13 @@ public class GameServer extends Server {
             this.send(pClientIP, pClientPort, "OK Game start");
         }
     }
-    
+
     /**
      * Process login messages from the client.
+     *
      * @param pClientIP
      * @param pClientPort
-     * @param pName 
+     * @param pName
      */
     public void onLoginMessage(String pClientIP, int pClientPort, String pName) {
         if (servergamelogic.isNameAlreadyTaken(pName)) {
@@ -83,29 +86,61 @@ public class GameServer extends Server {
         } else {
             servergamelogic.addPlayer(pName, pClientIP);
             this.send(pClientIP, pClientPort, "OK Login was successful");
+            
+            // Notifying all players that a new enemy has joined.
+            this.sendToAll("NEWENEMY " + pName);
         }
-        
+
     }
-    
+
     /**
      * Drops a chip in the column.
-     * @param pClientIP 
+     *
+     * @param pClientIP
      * @param pClientPort
      * @param pColumn The column where the chip should be dropped.
      */
     public void onDropMessage(String pClientIP, int pClientPort, String pColumn) {
         int column = Integer.parseInt(pColumn);
-        
+
         if (servergamelogic.isValidColumnNumber(column)) {
             if (servergamelogic.isColumnFull(column)) {
                 this.send(pClientIP, pClientPort, "ERR column full");
             } else {
                 Player p = servergamelogic.getPlayerByIpAddress(pClientIP);
-                int playerNumber = servergamelogic.getNumberOfPlayer(p) ;
+                int playerNumber = servergamelogic.getNumberOfPlayer(p);
+                
+                // Reflect drop in game server model and then notify game server of new drop.
                 servergamelogic.drop(playerNumber, column);
+                
+                
+                if(servergamelogic.hasGameEnded()) {
+                    this.onGameEnd();
+                } else {
+                    
+                    servergamelogic.switchPlayers();
+                }
             }
         } else {
-            this.send(pClientIP, pClientPort, "ERR invalid column selected");        }
+            this.send(pClientIP, pClientPort, "ERR invalid column selected");
+        }
+    }
+    
+    public void onGameEnd() {
+        
+        // Notify the player that the game has ended and whether they won or not.
+        Player winner = servergamelogic.getCurrentPlayer();
+        this.send(winner.getIpAddress(), winner.getPort(), "END true");
+        
+        Player looser = servergamelogic.getOtherPlayer();
+        this.send(looser.getIpAddress(), looser.getPort(), "END false");
+    }
+    
+    public void playerDroppedHandler (int pPlayerNumber, int pColumn, int pRow) {
+        System.out.println("DROP Player: " + pPlayerNumber + " Column: " + pColumn + " Row: " + pRow);
+        
+        // Send message to other player
+        this.sendToAll("DROPPED " + pPlayerNumber + " " + pColumn + " " + pRow);
     }
 
 }
