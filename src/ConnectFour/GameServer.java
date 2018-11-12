@@ -1,22 +1,23 @@
-package viergewinnt;
+package ConnectFour;
 
 import EgJavaLib2.netzwerk.*;
+
 /**
- * Write a description of class SpielServer here.
+ * Write a description of class GameServer here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class SpielServer extends Server{
+public class GameServer extends Server{
 
-    VierGewinntSpiel dasSpiel;
+    ConnectFourGame dasSpiel;
 
     /**
      * Constructor for objects of class SpielServer
      */
-    public SpielServer(){
+    public GameServer(){
         super(1234);
-        dasSpiel = new VierGewinntSpiel();
+        dasSpiel = new ConnectFourGame();
         dasSpiel.setzeServer(this);
     }
 

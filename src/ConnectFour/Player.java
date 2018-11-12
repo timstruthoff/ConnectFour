@@ -1,9 +1,9 @@
-package viergewinnt;
+package ConnectFour;
 
-public class Spieler {
+public class Player {
     private String name;
 
-    public Spieler(String pName){
+    public Player(String pName){
         name = pName;
     }
 

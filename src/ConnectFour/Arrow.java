@@ -1,13 +1,13 @@
-package viergewinnt;
+package ConnectFour;
 
 import EgJavaLib2.egSas.*;
 
-public class Pfeil extends Sprite{
+public class Arrow extends Sprite{
     private Polygon poly;
     private Rectangle rec;
-    private int spalte;
+    private int column;
 
-    public Pfeil(){
+    public Arrow(){
         rec = new Rectangle(100,100, 50,50, "black");
         rec.moveTo(100,100);
         this.add(rec);
@@ -20,17 +20,17 @@ public class Pfeil extends Sprite{
         this.scale(0.4,0.4);    
 
     }
-    public int gibSpalte(){
-        return spalte;   
+    public int getColumn(){
+        return column;   
     }
 
-    public void setzeSpalte(int pSpalte){
-        spalte = pSpalte;
+    public void setColumn(int pColumn){
+        column = pColumn;
     }
 
-    public void setzeFarbe(String pFarbe){
-        poly.setHexColor(pFarbe);
-        rec.setHexColor(pFarbe);
+    public void setColumn(String pColor){
+        poly.setHexColor(pColor);
+        rec.setHexColor(pColor);
     }
 
 }

@@ -1,29 +1,29 @@
-package viergewinnt;
+package ConnectFour;
 
 import EgJavaLib2.egSas.*;
 
-public class SpielFenster extends SasApp{
+public class GameWindow extends SasApp{
     
-    private Feld[][] felder = new Feld[7][7];
+    private Field[][] felder = new Field[7][7];
     
     private Text spielerEins = new Text(500,150,"Name Spieler 1");
     private Text spielerZwei = new Text(500,200,"Name Spieler 2");
     private Text ergebnis = new Text(500,250,"Spiel nicht aktiv");
     private Circle aktiv = new Circle(465,155,10, "green");
-    private Pfeil[] pfeilArray = new Pfeil[7];
+    private Arrow[] pfeilArray = new Arrow[7];
     private String spielerFarbe;
     
     private int anzahlProSpalte[] = {0,0,0,0,0,0,0};
     
-    private SpielClient client;
+    private GameClient client;
     
-    public SpielFenster(String pServerIP) {
+    public GameWindow(String pServerIP) {
         this.zeichneSpielfeld();
         spielerFarbe = "black";
         this.zeichnePfeile();
         myView.setSize(1000,600);
-        client = new SpielClient(pServerIP);
-        client.setzeFenster(this);
+        client = new GameClient(pServerIP);
+        client.setWindow(this);
     }
     
     public void zeichnePfeile(){
@@ -31,10 +31,10 @@ public class SpielFenster extends SasApp{
         int yStart = 85;
         
         for(int i = 0; i < 7; i++){
-            pfeilArray[i] = new Pfeil();
-            pfeilArray[i].setzeFarbe(spielerFarbe);
+            pfeilArray[i] = new Arrow();
+            pfeilArray[i].setColumn(spielerFarbe);
             pfeilArray[i].moveTo(xStart, yStart);
-            pfeilArray[i].setzeSpalte(i);
+            pfeilArray[i].setColumn(i);
             xStart = xStart + 50;
         }
     }
@@ -45,7 +45,7 @@ public class SpielFenster extends SasApp{
         
         for(int zeile = 0; zeile < 7; zeile++){
             for(int spalte = 0; spalte < 7; spalte++){
-                Feld f = new Feld(xStart, yStart);
+                Field f = new Field(xStart, yStart);
                 f.setzeDaten(spalte, zeile);
                 felder[spalte][zeile] = f;
                 xStart = xStart + 50;
@@ -75,10 +75,10 @@ public class SpielFenster extends SasApp{
     
     public void mouseClicked(){
         Object o = myView.getLastClicked();
-        if( o instanceof Pfeil){
-            Pfeil p = (Pfeil) o;
-            this.einwerfen(p.gibSpalte(), spielerFarbe);
-            //myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: "+p.gibSpalte());
+        if( o instanceof Arrow){
+            Arrow p = (Arrow) o;
+            this.einwerfen(p.getColumn(), spielerFarbe);
+            //myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: "+p.getColumn());
         }
     }
     
@@ -86,10 +86,10 @@ public class SpielFenster extends SasApp{
         if(pfeilArray[6] != null){
            for(int i = 0; i < 7; i++){
             if(pfeilArray[i].contains(myMouse.getX(), myMouse.getY())){
-                pfeilArray[i].setzeFarbe(spielerFarbe);
+                pfeilArray[i].setColumn(spielerFarbe);
             }
             else{
-                pfeilArray[i].setzeFarbe("black");
+                pfeilArray[i].setColumn("black");
             }
         } 
         }

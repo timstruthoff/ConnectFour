@@ -1,8 +1,8 @@
-package viergewinnt;
+package ConnectFour;
 
 import EgJavaLib2.egSas.*;
 
-public class Feld extends Sprite{
+public class Field extends Sprite{
     
     private Rectangle innen;
     private Rectangle rand;
@@ -13,7 +13,7 @@ public class Feld extends Sprite{
     
     private int breite;
     
-    public Feld(int pX, int pY) {
+    public Field(int pX, int pY) {
         breite = 50;
         spalte = -1;
         zeile = -1;
