@@ -17,8 +17,6 @@ public class GameServer extends Server{
      */
     public GameServer(){
         super(1234);
-        dasSpiel = new ConnectFourGame();
-        dasSpiel.setzeServer(this);
     }
 
     public void processNewConnection(String pClientIP, int pClientPort){

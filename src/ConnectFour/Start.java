@@ -34,11 +34,18 @@ public class Start {
                 // Display dialogue for selecting a server ip.
                 String serverIP = (String) JOptionPane.showInputDialog(null, "Wie lautet die Server-IP?", "Gleich geht's los!", JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
                 
+                
                 // Check if server ip is valid.
                 if ((serverIP != null) && (serverIP.length() > 6)) {
                     
                     // Start new game window with selected server ip.
-                    GameWindow window = new GameWindow(serverIP);
+                    GameClient client = new GameClient(serverIP);
+                    GameWindow window = new GameWindow(client);
+                    ConnectFourGame gameLogic = new ConnectFourGame();
+                
+                    gameLogic.setWindow(window);
+                    gameLogic.setClient(client);
+                    
                 }   
                 break;
             default:

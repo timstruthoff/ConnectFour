@@ -10,6 +10,7 @@ import EgJavaLib2.netzwerk.*;
  */
 public class GameClient extends Client{
     private GameWindow window;
+    private ConnectFourGame gameLogic;
 
     /**
      * Constructor for objects of class SpielClient
@@ -25,7 +26,24 @@ public class GameClient extends Client{
      */
     @Override
     public void processMessage(String pMessage){
-
+        
+        // Get the position where the string ends
+        int commandEndIndex = pMessage.indexOf(" ");
+        
+        // Get command from message
+        String command = pMessage.substring(0, commandEndIndex);
+   
+        // Get parameter from message after space
+        String parameter = pMessage.substring(commandEndIndex + 1);
+        
+        switch (command) {
+            case "NEWENEMY":
+                String enemyName = parameter;
+                gameLogic.onNewEnemy(enemyName);
+                break;
+            default:
+                break;
+        } 
     }
 
     public void setWindow(GameWindow pWindow){

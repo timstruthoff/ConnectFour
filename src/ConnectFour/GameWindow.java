@@ -17,13 +17,11 @@ public class GameWindow extends SasApp{
     
     private GameClient client;
     
-    public GameWindow(String pServerIP) {
+    public GameWindow(GameClient gameClient) {
         this.zeichneSpielfeld();
         spielerFarbe = "black";
         this.zeichnePfeile();
         myView.setSize(1000,600);
-        client = new GameClient(pServerIP);
-        client.setWindow(this);
     }
     
     public void zeichnePfeile(){
@@ -78,7 +76,7 @@ public class GameWindow extends SasApp{
         if( o instanceof Arrow){
             Arrow p = (Arrow) o;
             this.einwerfen(p.getColumn(), spielerFarbe);
-            //myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: "+p.getColumn());
+            myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: " + (p.getColumn() + 1));
         }
     }
     
@@ -96,10 +94,16 @@ public class GameWindow extends SasApp{
         
     }
     
-    public void einwerfen(int pSpalte, String pFarbe){
-        int zeile = 6 - anzahlProSpalte[pSpalte];
-        felder[pSpalte][zeile].setzeFarbe(pFarbe);
-        anzahlProSpalte[pSpalte] = anzahlProSpalte[pSpalte] + 1;
+    public void einwerfen(int pColumn, String pColor){
+        
+        // Calculate the position of the dropped chip.
+        int row = 6 - anzahlProSpalte[pColumn];
+        
+        // Change the filed color at that position.
+        this.verändereFeld(pColumn, row, pColor);
+        
+        // Increase the number of chips in that column.
+        anzahlProSpalte[pColumn] = anzahlProSpalte[pColumn] + 1;
     }
     
     public void verändereFeld(int pSpalte, int pZeile, String pFarbe){

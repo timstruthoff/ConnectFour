@@ -7,11 +7,11 @@ public class Player {
         name = pName;
     }
 
-    public void setzeName(String pName) {
+    public void setName(String pName) {
         name = pName;
     }
 
-    public String gibName(){
+    public String getName(){
         return name;
     }
     

@@ -9,6 +9,10 @@ package ConnectFour;
  */
 public class ConnectFourGame
 {
+     
+    private GameClient client;
+    private GameWindow window;
+    
     private String[][] playingField = new String[7][7];
     private boolean gameStarted;
     private Player playerOne;
@@ -16,9 +20,8 @@ public class ConnectFourGame
     private Player currentPlayer;
     private int numberOfPlayers;
     private int numberOfMarks;
-    private String gameResult;
-
-    private GameServer server;
+    private String gameResult;    
+    
 
     public ConnectFourGame()
     {
@@ -36,10 +39,6 @@ public class ConnectFourGame
 
     }
     
-    
-    public void setzeServer(GameServer pServer){
-        server = pServer;
-    }
     
     public void startGame(){
         gameStarted = true;
@@ -167,7 +166,7 @@ public class ConnectFourGame
         gameResult = "The game is still running!";
         if(pWon){
             gameStarted = false;
-            gameResult = "The game is over! Winner is: "+ currentPlayer.gibName(); 
+            gameResult = "The game is over! Winner is: "+ currentPlayer.getName(); 
         }
         else{
             if(numberOfMarks == 49){
@@ -178,24 +177,50 @@ public class ConnectFourGame
     }
 
     public String getPlayerOne(){
-        return playerOne.gibName();
+        return playerOne.getName();
     }
 
     public String getPlayerTwo(){
-        return playerTwo.gibName();
+        return playerTwo.getName();
     }
 
     public void addPlayer(String pName){
         if(numberOfPlayers == 0){
-            playerOne.setzeName(pName);
+            playerOne.setName(pName);
         }
         else if(numberOfPlayers == 1){
-            playerTwo.setzeName(pName);
+            playerTwo.setName(pName);
         }
         else{
             System.err.println("Error adding player: Game is full!");
         }
 
+    }
+    
+    /**
+     * Event listener to be called by the networking client
+     * when the server reports that a new enemy has
+     * joined the game.
+     * @param pName The name of the new enemy.
+     */
+    public void onNewEnemy(String pName) {
+        this.addPlayer(pName);
+    }
+    
+    /**
+     * Pass the network client to this class.
+     * @param pClient The network game client.
+     */
+    public void setClient(GameClient pClient) {
+        client = pClient;
+    }
+    
+    /**
+     * Pass the window to this class.
+     * @param pClient The window object.
+     */
+    public void setWindow(GameWindow pWindow) {
+        window = pWindow;
     }
 
    
