@@ -12,14 +12,14 @@ public class GameWindow extends SasApp {
     private Text resultGraphic = new Text(500, 250, "Game not active");
     private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
     private Arrow[] arrowGraphics = new Arrow[7];
-    private String playerColor;
-    private String playerColor;
+
+    private String playerOneColor = "blue";
+    private String playerTwoColor = "red";
 
     private NetworkingClient client;
 
     public GameWindow(NetworkingClient gameClient) {
         this.drawPlayingField();
-        playerColor = "black";
         this.drawArrows();
         myView.setSize(1000, 600);
     }
@@ -34,7 +34,6 @@ public class GameWindow extends SasApp {
 
         for (int i = 0; i < 7; i++) {
             arrowGraphics[i] = new Arrow();
-            arrowGraphics[i].setColumn(playerColor);
             arrowGraphics[i].moveTo(xStart, yStart);
             arrowGraphics[i].setColumn(i);
             xStart = xStart + 50;
@@ -116,15 +115,6 @@ public class GameWindow extends SasApp {
      */
     public void setFieldCellColor(int pColumn, int pRow, String pColor) {
         playingField[pColumn][pRow].setColor(pColor);
-    }
-
-    /**
-     * Change the color of the user's player.
-     *
-     * @param pFarbe The name of the new color as a string.
-     */
-    public void setPlayerColor(String pFarbe) {
-        playerColor = pFarbe;
     }
 
 }
