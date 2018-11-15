@@ -1,34 +1,38 @@
 package ConnectFour.client;
 
 import EgJavaLib2.egSas.*;
+import javax.swing.JOptionPane;
 
-public class GameWindow extends SasApp{
-    
+public class GameWindow extends SasApp {
+
     private Cell[][] playingField = new Cell[7][7];
-    
-    private Text playerOneGraphic = new Text(500,150,"Name Spieler 1");
-    private Text playerTwoGraphic = new Text(500,200,"Name Spieler 2");
-    private Text resultGraphic = new Text(500,250,"Spiel nicht aktiv");
-    private Circle activePlayerIndicatorGraphic = new Circle(465,155,10, "green");
+
+    private Text playerOneGraphic = new Text(500, 150, "Name Player 1");
+    private Text playerTwoGraphic = new Text(500, 200, "Name Player 2");
+    private Text resultGraphic = new Text(500, 250, "Game not active");
+    private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
     private Arrow[] arrowGraphics = new Arrow[7];
     private String playerColor;
-    
-    private int numberOfChipsInColumns[] = {0,0,0,0,0,0,0};
-    
+    private String playerColor;
+
     private NetworkingClient client;
-    
+
     public GameWindow(NetworkingClient gameClient) {
         this.drawPlayingField();
         playerColor = "black";
         this.drawArrows();
-        myView.setSize(1000,600);
+        myView.setSize(1000, 600);
     }
-    
-    public void drawArrows(){
+
+    public String askForPlayerName() {
+        return (String) JOptionPane.showInputDialog(null, "What is your name?", "", JOptionPane.QUESTION_MESSAGE, null, null, "");
+    }
+
+    public void drawArrows() {
         int xStart = 50;
         int yStart = 85;
-        
-        for(int i = 0; i < 7; i++){
+
+        for (int i = 0; i < 7; i++) {
             arrowGraphics[i] = new Arrow();
             arrowGraphics[i].setColumn(playerColor);
             arrowGraphics[i].moveTo(xStart, yStart);
@@ -37,12 +41,12 @@ public class GameWindow extends SasApp{
         }
     }
 
-    public void drawPlayingField(){
+    public void drawPlayingField() {
         int xStart = 50;
         int yStart = 150;
-        
-        for(int row = 0; row < 7; row++){
-            for(int column = 0; column < 7; column++){
+
+        for (int row = 0; row < 7; row++) {
+            for (int column = 0; column < 7; column++) {
                 Cell f = new Cell(xStart, yStart);
                 f.setPosition(column, row);
                 playingField[column][row] = f;
@@ -52,34 +56,42 @@ public class GameWindow extends SasApp{
             yStart = yStart + 50;
         }
     }
-    
-    public void setPlayerOneActive(){
+
+    public void setPlayerOneActive() {
         activePlayerIndicatorGraphic.setHidden(false);
-        activePlayerIndicatorGraphic.moveTo(465,155);
+        activePlayerIndicatorGraphic.moveTo(465, 155);
     }
-    
-    public void setPlayerTwoActive(){
+
+    public void setPlayerTwoActive() {
         activePlayerIndicatorGraphic.setHidden(false);
-        activePlayerIndicatorGraphic.moveTo(465,205);
+        activePlayerIndicatorGraphic.moveTo(465, 205);
     }
-    
-    public String showNameDialog(){
+
+    public void setPlayerOneName(String pName) {
+        playerOneGraphic.setText(pName);
+    }
+
+    public void setPlayerTwoName(String pName) {
+        playerTwoGraphic.setText(pName);
+    }
+
+    public String showNameDialog() {
         return myView.zeigeEingabeDialog("Wie heißt du?");
     }
-    
-    public void setResultGraphicText(String pText){
+
+    public void setResultGraphicText(String pText) {
         resultGraphic.setText(pText);
     }
-    
-    public void mouseClicked(){
+
+    public void mouseClicked() {
         Object o = myView.getLastClicked();
-        if( o instanceof Arrow){
+        if (o instanceof Arrow) {
             Arrow p = (Arrow) o;
-            this.drop(p.getColumn(), playerColor);
+            // this.drop(p.getColumn(), playerColor);
             myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: " + (p.getColumn() + 1));
         }
     }
-    
+
     /*public void mouseMoved(){
         if(pfeilArray[6] != null){
            for(int i = 0; i < 7; i++){
@@ -89,49 +101,30 @@ public class GameWindow extends SasApp{
             else{
                 arrowGraphics[i].setColumn("black");
             }
-        } 
         }
-        
+        }
+
     }*/
-    
     /**
-     * Drop a chip in a column.
-     * Calculates the position of the top spot and places a chip there.
-     * @param pColumn
-     * @param pColor 
-     */
-    public void drop (int pColumn, String pColor){
-        
-        // Calculate the position of the dropped chip.
-        int row = 6 - numberOfChipsInColumns[pColumn];
-        
-        // Change the filed color at that position.
-        this.setFieldCellColor(pColumn, row, pColor);
-        
-        // Increase the number of chips in that column.
-        numberOfChipsInColumns[pColumn] = numberOfChipsInColumns[pColumn] + 1;
-    }
-    
-    /**
-     * Change the color of a cell in th eplaying field to show that there is a chip placed there.
-     * @param pColumn The column of the cell of which the color should be changed.
+     * Change the color of a cell in the playing field to show that there is a
+     * chip placed there.
+     *
+     * @param pColumn The column of the cell of which the color should be
+     * changed.
      * @param pRow The row of the cell of which the color should be changed.
      * @param pColor The name of the new color as a string.
      */
-    public void setFieldCellColor(int pColumn, int pRow, String pColor){
+    public void setFieldCellColor(int pColumn, int pRow, String pColor) {
         playingField[pColumn][pRow].setColor(pColor);
     }
-    
+
     /**
      * Change the color of the user's player.
+     *
      * @param pFarbe The name of the new color as a string.
      */
-    public void setPlayerColor(String pFarbe){
+    public void setPlayerColor(String pFarbe) {
         playerColor = pFarbe;
     }
-    
-    
-    
-    
-    
+
 }

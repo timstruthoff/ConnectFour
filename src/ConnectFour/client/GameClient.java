@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 public class GameClient {
 
     public GameClient() {
-        
+
         System.out.println("Client: Started.");
 
         // Display dialogue for selecting a server ip.
@@ -22,13 +22,13 @@ public class GameClient {
 
         // Check if server ip is valid.
         if ((serverIP != null) && (serverIP.length() > 6)) {
-            
+
             System.out.println("Client: User selected IP " + serverIP);
-            
+
             // Start new game window with selected server ip.
             NetworkingClient client = new NetworkingClient(serverIP);
             GameWindow window = new GameWindow(client);
-            ConnectFourGame gameLogic = new ConnectFourGame();
+            ConnectFourGame gameLogic = new ConnectFourGame(client, window);
 
             gameLogic.setWindow(window);
             gameLogic.setClient(client);

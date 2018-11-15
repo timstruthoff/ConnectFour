@@ -14,20 +14,27 @@ public class ConnectFourGame {
     private GameWindow window;
 
     private String[][] playingField = new String[7][7];
+    private int numberOfChipsInColumns[] = {0, 0, 0, 0, 0, 0, 0};
+    private int numberOfMarks;
+
     private boolean gameStarted;
+
     private Player playerOne;
     private Player playerTwo;
     private Player currentPlayer;
     private int numberOfPlayers;
-    private int numberOfMarks;
+
     private String gameResult;
 
-    public ConnectFourGame() {
+    public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow) {
+        client = pClient;
+        window = pWindow;
+
         gameStarted = false;
         numberOfPlayers = 0;
         numberOfMarks = 0;
-        playerOne = new Player("Spieler 1");
-        playerTwo = new Player("Spieler 2");
+        playerOne = new Player("Player 1");
+        playerTwo = new Player("Player 2");
 
         for (int column = 0; column < 7; column++) {
             for (int row = 0; row < 7; row++) {
@@ -35,9 +42,17 @@ public class ConnectFourGame {
             }
         }
 
+        this.startGame();
+
     }
 
     public void startGame() {
+
+        // Ask for player name and then send it to the server.
+        String playerName = window.askForPlayerName();
+        client.sendPlayerName(playerName);
+        this.addPlayer(playerName);
+
         gameStarted = true;
         currentPlayer = playerOne;
     }
@@ -60,12 +75,31 @@ public class ConnectFourGame {
                 numberOfMarks++;
                 this.switchPlayers();
             } else {
-                System.err.println("Fehler bei Zeichensetzen: kein aktueller Spieler");
+                System.err.println("Error Resetting: no current player!");
             }
         } else {
-            System.err.println("Fehler bei Zeichensetzen: Feld schon markiert");
+            System.err.println("Error setting mark: Cell already marked");
         }
 
+    }
+
+    /**
+     * Drop a chip in a column. Calculates the position of the top spot and
+     * places a chip there.
+     *
+     * @param pColumn
+     * @param pColor
+     */
+    public void drop(int pColumn, String pColor) {
+
+        // Calculate the position of the dropped chip.
+        int row = 6 - numberOfChipsInColumns[pColumn];
+
+        // Change the filed color at that position.
+        this.setMark(pColumn, row);
+
+        // Increase the number of chips in that column.
+        numberOfChipsInColumns[pColumn] = numberOfChipsInColumns[pColumn] + 1;
     }
 
     public void switchPlayers() {
@@ -102,8 +136,10 @@ public class ConnectFourGame {
     public void addPlayer(String pName) {
         if (numberOfPlayers == 0) {
             playerOne.setName(pName);
+            window.setPlayerOneName(pName);
         } else if (numberOfPlayers == 1) {
             playerTwo.setName(pName);
+            window.setPlayerOneName(pName);
         } else {
             System.err.println("Error adding player: Game is full!");
         }
