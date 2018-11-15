@@ -1,13 +1,23 @@
-package ConnectFour.server;
+package ConnectFour.server.PlayerStore;
+
+import java.util.UUID;
 
 public class Player {
 
+    private UUID id;
     private String name;
     private String ipAddress;
     private int port;
 
-    public Player(String pName) {
+    public Player(String pName, String pIpAddress, int pPort) {
+        id = UUID.randomUUID();
         name = pName;
+        ipAddress = pIpAddress;
+        port = pPort;
+    }
+
+    public String getID() {
+        return id.toString();
     }
 
     public void setName(String pName) {
@@ -18,16 +28,8 @@ public class Player {
         return name;
     }
 
-    public void setIpAddress(String pIpAddress) {
-        ipAddress = pIpAddress;
-    }
-
     public String getIpAddress() {
         return ipAddress;
-    }
-
-    public void setPort(int pPort) {
-        port = pPort;
     }
 
     public int getPort() {

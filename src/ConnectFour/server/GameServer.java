@@ -1,6 +1,8 @@
 package ConnectFour.server;
 
+import ConnectFour.server.PlayerStore.Player;
 import EgJavaLib2.netzwerk.*;
+import java.util.List;
 
 /**
  * Write a description of class GameServer here.
@@ -78,7 +80,7 @@ public class GameServer extends Server {
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
 
-        int playerNumber = servergamelogic.getNumberOfPlayers();
+        int playerNumber = servergamelogic.getPlayerStore().getNumberOfPlayers();
 
         // Check how many players are already on the server.
         if (playerNumber > 2) {
@@ -98,15 +100,11 @@ public class GameServer extends Server {
      * @param pName
      */
     public void onLoginMessage(String pClientIP, int pClientPort, String pName) {
-        if (servergamelogic.isNameAlreadyTaken(pName)) {
-            this.send(pClientIP, pClientPort, "ERR Name already taken");
-        } else {
-            servergamelogic.addPlayer(pName, pClientIP);
-            this.send(pClientIP, pClientPort, "OK Login was successful");
+        Player p = servergamelogic.addPlayer(pName, pClientIP, pClientPort);
+        this.send(pClientIP, pClientPort, "OK " + p.getID());
 
-            // Notifying all players that a new enemy has joined.
-            this.sendToAll("NEWENEMY " + pName);
-        }
+        // Notifying all players that a new enemy has joined.
+        this.sendToAll("NEWENEMY " + p.getID() + " " + p.getName() + " " + p.getIpAddress() + " " + p.getPort());
 
     }
 
@@ -124,17 +122,15 @@ public class GameServer extends Server {
             if (servergamelogic.isColumnFull(column)) {
                 this.send(pClientIP, pClientPort, "ERR column full");
             } else {
-                Player p = servergamelogic.getPlayerByIpAddress(pClientIP);
-                int playerNumber = servergamelogic.getNumberOfPlayer(p);
+                Player p = servergamelogic.getPlayerStore().getPlayerBySocket(pClientIP, pClientPort);
 
-                // Reflect drop in game server model and then notify game server of new drop.
-                servergamelogic.drop(playerNumber, column);
+                // Check if player exists
+                if (p != null) {
 
-                if (servergamelogic.hasGameEnded()) {
-                    this.sendGameEnded();
+                    // Reflect drop in game server model and then notify game server of new drop.
+                    servergamelogic.drop(p.getID(), column);
                 } else {
-
-                    servergamelogic.switchPlayers();
+                    this.send(pClientIP, pClientPort, "ERR No player found");
                 }
             }
         } else {
@@ -149,11 +145,13 @@ public class GameServer extends Server {
     public void sendGameEnded() {
 
         // Notify the player that the game has ended and whether they won or not.
-        Player winner = servergamelogic.getCurrentPlayer();
+        Player winner = servergamelogic.getActivePlayer();
         this.send(winner.getIpAddress(), winner.getPort(), "END true");
 
-        Player looser = servergamelogic.getOtherPlayer();
-        this.send(looser.getIpAddress(), looser.getPort(), "END false");
+        List<Player> loosers = servergamelogic.getInactivePlayers();
+        for (Player looser : loosers) {
+            this.send(looser.getIpAddress(), looser.getPort(), "END false");
+        }
     }
 
     /**
@@ -163,11 +161,11 @@ public class GameServer extends Server {
      * @param pColumn
      * @param pRow
      */
-    public void handlePlayerDrop(int pPlayerNumber, int pColumn, int pRow) {
-        System.out.println("DROP Player: " + pPlayerNumber + " Column: " + pColumn + " Row: " + pRow);
+    public void handlePlayerDrop(String pPlayerId, int pColumn, int pRow) {
+        System.out.println("DROP Player: " + pPlayerId + " Column: " + pColumn + " Row: " + pRow);
 
         // Send message to other player
-        this.sendToAll("DROPPED " + pPlayerNumber + " " + pColumn + " " + pRow);
+        this.sendToAll("DROPPED " + pPlayerId + " " + pColumn + " " + pRow);
     }
 
 }

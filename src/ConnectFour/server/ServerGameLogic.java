@@ -5,6 +5,10 @@
  */
 package ConnectFour.server;
 
+import ConnectFour.server.PlayerStore.Player;
+import ConnectFour.server.PlayerStore.PlayerStore;
+import java.util.List;
+
 /**
  *
  * @author tmst
@@ -12,20 +16,45 @@ package ConnectFour.server;
 public class ServerGameLogic {
 
     private GameServer gameServer;
+    private PlayerStore playerStore = new PlayerStore();
+    private int currentPlayerNumber = 0;
+    private Player currentPlayer;
+
     private int numberOfColumns = 7;
     private int numberOfRows = 7;
     private String[][] playingField = new String[numberOfColumns][7];
     private int numberOfChipsInColumn[] = {0, 0, 0, 0, 0, 0, 0};
     private boolean gameStarted;
-    private Player playerOne;
-    private Player playerTwo;
-    private Player currentPlayer;
-    private int numberOfPlayers;
     private int numberOfMarks;
     private String gameResult;
 
     public ServerGameLogic(GameServer pGameServer) {
         gameServer = pGameServer;
+    }
+
+    /**
+     * Add a new player to the game.
+     *
+     * @param pName
+     * @param pIpAddress
+     * @param pPort
+     * @return The player.
+     */
+    public Player addPlayer(String pName, String pIpAddress, int pPort) {
+        Player p = playerStore.addPlayer(pName, pName, pPort);
+        return p;
+    }
+
+    public PlayerStore getPlayerStore() {
+        return playerStore;
+    }
+
+    public Player getActivePlayer() {
+        return currentPlayer;
+    }
+
+    public List<Player> getInactivePlayers() {
+        return playerStore.getAllExcept(currentPlayer);
     }
 
     /**
@@ -118,21 +147,11 @@ public class ServerGameLogic {
      * @param pColumn The column where the mark should be set.
      * @param pRow The row where the mark should be set.
      */
-    public void setMark(int pPlayerNumber, int pColumn, int pRow) {
+    public void setMark(String playerId, int pColumn, int pRow) {
         if (playingField[pColumn][pRow].equals(" ")) {
 
             // Using a seperate marking character for each player.
-            switch (pPlayerNumber) {
-                case 0:
-                    playingField[pColumn][pRow] = "X";
-                    break;
-                case 1:
-                    playingField[pColumn][pRow] = "O";
-                    break;
-                default:
-                    System.err.println("Error: Invalid player number!");
-                    break;
-            }
+            playingField[pColumn][pRow] = playerId;
 
             numberOfMarks++;
         } else {
@@ -149,20 +168,20 @@ public class ServerGameLogic {
      * @param pColumn The number of the column in which the chip should be
      * dropped.
      */
-    public void drop(int pPlayerNumber, int pColumn) {
+    public void drop(String pPlayerId, int pColumn) {
         if (!isColumnFull(pColumn)) {
 
             // Calculate the position of the dropped chip.
             int row = numberOfRows - 1 - numberOfChipsInColumn[pColumn];
 
             // Change the fill color at that position.
-            this.setMark(pPlayerNumber, pColumn, row);
+            this.setMark(pPlayerId, pColumn, row);
 
             // Increase the number of chips in that column.
             numberOfChipsInColumn[pColumn]++;
 
             // Notify game server of successful drop
-            gameServer.handlePlayerDrop(pPlayerNumber, pColumn, row);
+            gameServer.handlePlayerDrop(pPlayerId, pColumn, row);
         }
     }
 
@@ -177,56 +196,6 @@ public class ServerGameLogic {
             }
 
         }
-    }
-
-    public void switchPlayers() {
-        if (currentPlayer == playerOne) {
-            currentPlayer = playerTwo;
-        } else if (currentPlayer == playerTwo) {
-            currentPlayer = playerOne;
-        } else {
-            System.err.println("Error while switching palyers: No current player!");
-        }
-    }
-
-    public String getPlayerOne() {
-        return playerOne.getName();
-    }
-
-    public String getPlayerTwo() {
-        return playerTwo.getName();
-    }
-
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-
-    /**
-     * Adds a new player to the game.
-     *
-     * @param pName The name of the new player.
-     */
-    public void addPlayer(String pName, String pClientIP) {
-        if (numberOfPlayers == 0) {
-            playerOne.setName(pName);
-        } else if (numberOfPlayers == 1) {
-            playerTwo.setName(pName);
-        } else {
-            System.err.println("Error adding player: Game is full!");
-        }
-
-    }
-
-    /**
-     * Check whether a name is already taken in the game.
-     *
-     * @param pName The name to be checked.
-     * @return Boolean indicating whether the name is taken.
-     */
-    public boolean isNameAlreadyTaken(String pName) {
-        boolean hasPlayerOneTheName = playerOne != null && playerOne.getName().equals(pName);
-        boolean hasPlayerTwoTheName = playerTwo != null && playerTwo.getName().equals(pName);
-        return !hasPlayerOneTheName && !hasPlayerTwoTheName;
     }
 
     /**
@@ -249,65 +218,9 @@ public class ServerGameLogic {
         return numberOfChipsInColumn[pColumn] >= numberOfRows;
     }
 
-    /**
-     * Gets a player by the ip address.
-     *
-     * @param pIpAddress The ip address of player.
-     * @return
-     */
-    public Player getPlayerByIpAddress(String pIpAddress) {
-        if (playerOne.getIpAddress().equals(pIpAddress)) {
-            return playerOne;
-        } else if (playerTwo.getIpAddress().equals(pIpAddress)) {
-            return playerTwo;
-        } else {
-            return null;
-        }
+    public void nextPlayer() {
+        currentPlayerNumber++;
+        currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
     }
 
-    /**
-     * Gets the number of the supplied player object.
-     *
-     * @param pPlayer A player object.
-     * @return The number: Either 0 or 1
-     */
-    public int getNumberOfPlayer(Player pPlayer) {
-        if (pPlayer == playerOne) {
-            return 0;
-        } else if (pPlayer == playerTwo) {
-            return 1;
-        }
-        // Player is neither one nor two, thus invalid.
-        return -1;
-    }
-
-    /**
-     * Returns a player object with a number.
-     *
-     * @param pPlayerNumber
-     * @return
-     */
-    public Player getPlayerByNumber(int pPlayerNumber) {
-        switch (pPlayerNumber) {
-            case 0:
-                return playerOne;
-            case 1:
-                return playerTwo;
-            default:
-                System.err.println("Invalid player number!");
-        }
-        return null;
-    }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public Player getOtherPlayer() {
-        if (currentPlayer == playerOne) {
-            return playerTwo;
-        } else {
-            return playerOne;
-        }
-    }
 }
