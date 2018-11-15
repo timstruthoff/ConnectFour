@@ -160,7 +160,7 @@ public class ServerGameLogic {
 
             // Increase the number of chips in that column.
             numberOfChipsInColumn[pColumn]++;
-            
+
             // Notify game server of successful drop
             gameServer.handlePlayerDrop(pPlayerNumber, pColumn, row);
         }
@@ -267,6 +267,7 @@ public class ServerGameLogic {
 
     /**
      * Gets the number of the supplied player object.
+     *
      * @param pPlayer A player object.
      * @return The number: Either 0 or 1
      */
@@ -279,14 +280,15 @@ public class ServerGameLogic {
         // Player is neither one nor two, thus invalid.
         return -1;
     }
-    
+
     /**
      * Returns a player object with a number.
+     *
      * @param pPlayerNumber
-     * @return 
+     * @return
      */
     public Player getPlayerByNumber(int pPlayerNumber) {
-        switch(pPlayerNumber) {
+        switch (pPlayerNumber) {
             case 0:
                 return playerOne;
             case 1:
@@ -296,16 +298,16 @@ public class ServerGameLogic {
         }
         return null;
     }
-    
+
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-    
+
     public Player getOtherPlayer() {
         if (currentPlayer == playerOne) {
             return playerTwo;
         } else {
-            return playerOne;   
+            return playerOne;
         }
     }
 }
