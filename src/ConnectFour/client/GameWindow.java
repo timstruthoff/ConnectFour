@@ -15,9 +15,9 @@ public class GameWindow extends SasApp{
     
     private int numberOfChipsInColumns[] = {0,0,0,0,0,0,0};
     
-    private GameClient client;
+    private NetworkingClient client;
     
-    public GameWindow(GameClient gameClient) {
+    public GameWindow(NetworkingClient gameClient) {
         this.drawPlayingField();
         playerColor = "black";
         this.drawArrows();

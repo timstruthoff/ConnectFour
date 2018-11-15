@@ -1,9 +1,7 @@
 package ConnectFour;
 
 import ConnectFour.server.GameServer;
-import ConnectFour.client.GameWindow;
 import ConnectFour.client.GameClient;
-import ConnectFour.client.ConnectFourGame;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,7 +13,7 @@ import javax.swing.JOptionPane;
 public class Start {
 
     public Start() {
-
+        
         // Prepare options which the user can select when starting the app.
         Object[] options = {"Start server and play as a client.", "Only play as a client", "Cancel"};
 
@@ -28,35 +26,20 @@ public class Start {
             // User selected "Start server and play as a client".
             case 0:
 
-                // Start new game server
-                GameServer s = new GameServer();
-                this.startClient("127.0.0.1");
+                // Start new game server and new client.
+                GameServer server = new GameServer();
+                GameClient client = new GameClient();
                 break;
 
             // User selected "Only play as a client".
             case 1:
-
-                // Display dialogue for selecting a server ip.
-                String serverIP = (String) JOptionPane.showInputDialog(null, "What is your server ip?", "The game is starting soon!!", JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
-
-                // Check if server ip is valid.
-                if ((serverIP != null) && (serverIP.length() > 6)) {
-                    this.startClient(serverIP);
-                }
+                
+                // Start new game server and new client.
+                GameClient client2 = new GameClient();
                 break;
             default:
                 System.exit(0);
         }
-    }
-
-    private void startClient(String pServerIP) {
-        // Start new game window with selected server ip.
-        GameClient client = new GameClient(pServerIP);
-        GameWindow window = new GameWindow(client);
-        ConnectFourGame gameLogic = new ConnectFourGame();
-
-        gameLogic.setWindow(window);
-        gameLogic.setClient(client);
     }
 
     public static void main(String[] args) {

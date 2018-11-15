@@ -12,7 +12,7 @@ import ConnectFour.server.Player;
 public class ConnectFourGame
 {
      
-    private GameClient client;
+    private NetworkingClient client;
     private GameWindow window;
     
     private String[][] playingField = new String[7][7];
@@ -137,7 +137,7 @@ public class ConnectFourGame
      * Pass the network client to this class.
      * @param pClient The network game client.
      */
-    public void setClient(GameClient pClient) {
+    public void setClient(NetworkingClient pClient) {
         client = pClient;
     }
     

@@ -1,61 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package ConnectFour.client;
 
-import EgJavaLib2.netzwerk.*;
 import javax.swing.JOptionPane;
 
 /**
- * Write a description of class GameClient here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author tmst
  */
-public class GameClient extends Client{
-    private GameWindow window;
-    private ConnectFourGame gameLogic;
+public class GameClient {
 
-    /**
-     * Constructor for objects of class SpielClient
-     * @param pServerIP 
-     */
-    public GameClient(String pServerIP){
-        super(pServerIP,1234);
-    }
-    
-    public void initialSetup() {
-        this.send("START");
-        
+    public GameClient() {
+
         // Display dialogue for selecting a server ip.
-        String name = (String) JOptionPane.showInputDialog(null, "What is your name?", "", JOptionPane.QUESTION_MESSAGE, null, null, "");
-    }
+        String serverIP = (String) JOptionPane.showInputDialog(null, "What is your server ip?", "The game is starting soon!!", JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
 
-    /**
-     *
-     * @param pMessage
-     */
-    @Override
-    public void processMessage(String pMessage){
-        
-        // Get the position where the string ends
-        int commandEndIndex = pMessage.indexOf(" ");
-        
-        // Get command from message
-        String command = pMessage.substring(0, commandEndIndex);
-   
-        // Get parameter from message after space
-        String parameter = pMessage.substring(commandEndIndex + 1);
-        
-        switch (command) {
-            case "NEWENEMY":
-                String enemyName = parameter;
-                gameLogic.onNewEnemy(enemyName);
-                break;
-            default:
-                break;
-        } 
-    }
+        // Check if server ip is valid.
+        if ((serverIP != null) && (serverIP.length() > 6)) {
+            // Start new game window with selected server ip.
+            NetworkingClient client = new NetworkingClient(serverIP);
+            GameWindow window = new GameWindow(client);
+            ConnectFourGame gameLogic = new ConnectFourGame();
 
-    public void setWindow(GameWindow pWindow){
-        window = pWindow;
-    }
+            gameLogic.setWindow(window);
+            gameLogic.setClient(client);
+        }
 
+    }
 }
