@@ -1,4 +1,4 @@
-package ConnectFour;
+package ConnectFour.server;
 
 import EgJavaLib2.netzwerk.*;
 

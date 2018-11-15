@@ -1,6 +1,7 @@
-package ConnectFour;
+package ConnectFour.client;
 
 import EgJavaLib2.netzwerk.*;
+import javax.swing.JOptionPane;
 
 /**
  * Write a description of class GameClient here.
@@ -18,6 +19,13 @@ public class GameClient extends Client{
      */
     public GameClient(String pServerIP){
         super(pServerIP,1234);
+    }
+    
+    public void initialSetup() {
+        this.send("START");
+        
+        // Display dialogue for selecting a server ip.
+        String name = (String) JOptionPane.showInputDialog(null, "What is your name?", "", JOptionPane.QUESTION_MESSAGE, null, null, "");
     }
 
     /**

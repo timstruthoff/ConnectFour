@@ -1,4 +1,4 @@
-package ConnectFour;
+package ConnectFour.client;
 
 import EgJavaLib2.egSas.*;
 
@@ -75,12 +75,12 @@ public class GameWindow extends SasApp{
         Object o = myView.getLastClicked();
         if( o instanceof Arrow){
             Arrow p = (Arrow) o;
-            this.einwerfen(p.getColumn(), spielerFarbe);
+            this.drop(p.getColumn(), spielerFarbe);
             myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: " + (p.getColumn() + 1));
         }
     }
     
-    public void mouseMoved(){
+    /*public void mouseMoved(){
         if(pfeilArray[6] != null){
            for(int i = 0; i < 7; i++){
             if(pfeilArray[i].contains(myMouse.getX(), myMouse.getY())){
@@ -92,9 +92,9 @@ public class GameWindow extends SasApp{
         } 
         }
         
-    }
+    }*/
     
-    public void einwerfen(int pColumn, String pColor){
+    public void drop (int pColumn, String pColor){
         
         // Calculate the position of the dropped chip.
         int row = 6 - anzahlProSpalte[pColumn];

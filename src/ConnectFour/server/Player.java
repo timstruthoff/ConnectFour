@@ -1,4 +1,4 @@
-package ConnectFour;
+package ConnectFour.server;
 
 public class Player {
     private String name;

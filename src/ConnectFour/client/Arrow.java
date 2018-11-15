@@ -1,4 +1,4 @@
-package ConnectFour;
+package ConnectFour.client;
 
 import EgJavaLib2.egSas.*;
 

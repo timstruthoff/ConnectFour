@@ -1,4 +1,6 @@
-package ConnectFour;
+package ConnectFour.client;
+
+import ConnectFour.server.Player;
 
 
 /**
@@ -85,82 +87,6 @@ public class ConnectFourGame
             System.err.println("Error while switching palyers: No current player!");            
         }
     }
-
-    public void checkForGameEnd(){
-        boolean won = false;
-
-        for(int row = 0; row < 7; row++){
-            for(int position = 0; position < 4; position++){
-
-                String mark1 = playingField[position][row];
-                String mark2 = playingField[position + 1][row];
-                String mark3 = playingField[position + 2][row];
-                String mark4 = playingField[position + 3][row];
-
-                if(mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)){
-                    won = true;
-                    break;
-                }
-            }
-        }
-
-        if(won == false){
-            for(int column = 0; column < 7; column++){
-                for(int position = 0; position < 4; position++){
-
-                    String mark1 = playingField[column][position];
-                    String mark2 = playingField[column][position + 1];
-                    String mark3 = playingField[column][position + 2];
-                    String mark4 = playingField[column][position + 3];
-
-                    if(mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)){
-                        won = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if(won == false){
-            for(int column = 0; column < 7; column++){
-                for(int row = 0; row < 7; row++){
-                    if(column + 3 < 7 && row + 3 < 7){
-                        String mark1 = playingField[column][row];
-                        String mark2 = playingField[column+1][row + 1];
-                        String mark3 = playingField[column+2][row + 2];
-                        String mark4 = playingField[column+3][row + 3];
-
-                        if(mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)){
-                            won = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-        }
-        
-        if(won == false){
-            for(int column = 6; column >= 0; column--){
-                for(int row = 6; row >= 0; row--){
-                    if(column - 3 >= 0 && row  - 3 >= 0){
-                        String mark1 = playingField[column][row];
-                        String mark2 = playingField[column-1][row - 1];
-                        String mark3 = playingField[column-2][row - 2];
-                        String mark4 = playingField[column-3][row - 3];
-
-                        if(mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)){
-                            won = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-        }     
-        this.gameEnd(won);       
-    }
-
     
     public void gameEnd(boolean pWon){
         gameResult = "The game is still running!";
