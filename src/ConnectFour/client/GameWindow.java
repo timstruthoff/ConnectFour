@@ -91,19 +91,19 @@ public class GameWindow extends SasApp {
         }
     }
 
-    /*public void mouseMoved(){
-        if(pfeilArray[6] != null){
-           for(int i = 0; i < 7; i++){
-            if(arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())){
-                arrowGraphics[i].setColumn(playerColor);
+    public void mouseMoved() {
+        if (arrowGraphics[6] != null) {
+            for (int i = 0; i < 7; i++) {
+                if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
+                    arrowGraphics[i].setColor(playerOneColor);
+                } else {
+                    arrowGraphics[i].setColor("black");
+                }
             }
-            else{
-                arrowGraphics[i].setColumn("black");
-            }
-        }
         }
 
-    }*/
+    }
+
     /**
      * Change the color of a cell in the playing field to show that there is a
      * chip placed there.

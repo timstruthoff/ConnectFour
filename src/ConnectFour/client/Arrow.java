@@ -30,7 +30,7 @@ public class Arrow extends Sprite {
         column = pColumn;
     }
 
-    public void setColumn(String pColor) {
+    public void setColor(String pColor) {
         poly.setHexColor(pColor);
         rec.setHexColor(pColor);
     }
