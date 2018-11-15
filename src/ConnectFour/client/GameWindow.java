@@ -4,7 +4,7 @@ import EgJavaLib2.egSas.*;
 
 public class GameWindow extends SasApp{
     
-    private Field[][] playingField = new Field[7][7];
+    private Cell[][] playingField = new Cell[7][7];
     
     private Text playerOneGraphic = new Text(500,150,"Name Spieler 1");
     private Text playerTwoGraphic = new Text(500,200,"Name Spieler 2");
@@ -43,8 +43,8 @@ public class GameWindow extends SasApp{
         
         for(int row = 0; row < 7; row++){
             for(int column = 0; column < 7; column++){
-                Field f = new Field(xStart, yStart);
-                f.setzeDaten(column, row);
+                Cell f = new Cell(xStart, yStart);
+                f.setPosition(column, row);
                 playingField[column][row] = f;
                 xStart = xStart + 50;
             }
@@ -119,7 +119,7 @@ public class GameWindow extends SasApp{
      * @param pColor The name of the new color as a string.
      */
     public void setFieldCellColor(int pColumn, int pRow, String pColor){
-        playingField[pColumn][pRow].setzeFarbe(pColor);
+        playingField[pColumn][pRow].setColor(pColor);
     }
     
     /**
