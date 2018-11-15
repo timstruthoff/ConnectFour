@@ -1,7 +1,5 @@
 package ConnectFour.client;
 
-import ConnectFour.server.PlayerStore.Player;
-
 /**
  * Write a description of class GameServer here.
  *
@@ -14,15 +12,9 @@ public class ConnectFourGame {
     private GameWindow window;
 
     private String[][] playingField = new String[7][7];
-    private int numberOfChipsInColumns[] = {0, 0, 0, 0, 0, 0, 0};
     private int numberOfMarks;
 
     private boolean gameStarted;
-
-    private Player playerOne;
-    private Player playerTwo;
-    private Player currentPlayer;
-    private int numberOfPlayers;
 
     private String gameResult;
 
@@ -31,10 +23,9 @@ public class ConnectFourGame {
         window = pWindow;
 
         gameStarted = false;
-        numberOfPlayers = 0;
         numberOfMarks = 0;
-        playerOne = new Player("Player 1");
-        playerTwo = new Player("Player 2");
+        //playerOne = new Player("Player 1");
+        //playerTwo = new Player("Player 2");
 
         for (int column = 0; column < 7; column++) {
             for (int row = 0; row < 7; row++) {
@@ -51,10 +42,8 @@ public class ConnectFourGame {
         // Ask for player name and then send it to the server.
         String playerName = window.askForPlayerName();
         client.sendPlayerName(playerName);
-        this.addPlayer(playerName);
 
         gameStarted = true;
-        currentPlayer = playerOne;
     }
 
     /**
@@ -65,7 +54,7 @@ public class ConnectFourGame {
      * @param pRow The row where the mark should be set.
      */
     public void setMark(int pColumn, int pRow, int pPlayerNumber) {
-        if (playingField[pColumn][pRow].equals(" ")) {
+        /*if (playingField[pColumn][pRow].equals(" ")) {
             if (currentPlayer == playerOne) {
                 playingField[pColumn][pRow] = "X";
                 numberOfMarks++;
@@ -79,7 +68,7 @@ public class ConnectFourGame {
             }
         } else {
             System.err.println("Error setting mark: Cell already marked");
-        }
+        }*/
 
     }
 
@@ -95,58 +84,17 @@ public class ConnectFourGame {
         client.sendDrop(pColumn);
     }
 
-    public void switchPlayers() {
-        if (currentPlayer == playerOne) {
-            currentPlayer = playerTwo;
-        } else if (currentPlayer == playerTwo) {
-            currentPlayer = playerOne;
-        } else {
-            System.err.println("Error while switching palyers: No current player!");
-        }
-    }
-
     public void gameEnd(boolean pWon) {
         gameResult = "The game is still running!";
         if (pWon) {
             gameStarted = false;
-            gameResult = "The game is over! Winner is: " + currentPlayer.getName();
+            // gameResult = "The game is over! Winner is: " + currentPlayer.getName();
         } else {
             if (numberOfMarks == 49) {
                 gameResult = "The game is over! Draw, there is no winner!";
             }
 
         }
-    }
-
-    public String getPlayerOne() {
-        return playerOne.getName();
-    }
-
-    public String getPlayerTwo() {
-        return playerTwo.getName();
-    }
-
-    public void addPlayer(String pName) {
-        if (numberOfPlayers == 0) {
-            playerOne.setName(pName);
-            window.setPlayerOneName(pName);
-        } else if (numberOfPlayers == 1) {
-            playerTwo.setName(pName);
-            window.setPlayerOneName(pName);
-        } else {
-            System.err.println("Error adding player: Game is full!");
-        }
-
-    }
-
-    /**
-     * Event listener to be called by the networking client when the server
-     * reports that a new enemy has joined the game.
-     *
-     * @param pName The name of the new enemy.
-     */
-    public void onNewEnemy(String pName) {
-        this.addPlayer(pName);
     }
 
     /**

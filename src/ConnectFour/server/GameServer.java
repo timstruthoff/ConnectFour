@@ -80,16 +80,8 @@ public class GameServer extends Server {
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
 
-        int playerNumber = servergamelogic.getPlayerStore().getNumberOfPlayers();
+        this.send(pClientIP, pClientPort, "OK Game start");
 
-        // Check how many players are already on the server.
-        if (playerNumber > 2) {
-            this.send(pClientIP, pClientPort, "ERR Game full");
-        } else if (playerNumber == 0) {
-            this.send(pClientIP, pClientPort, "OK Waiting for players");
-        } else if (playerNumber == 1) {
-            this.send(pClientIP, pClientPort, "OK Game start");
-        }
     }
 
     /**

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class PlayerStore {
 
-    private List<Player> players;
+    private List<Player> players = new ArrayList<Player>();
 
     /**
      * Gets a player by the socket through which they connected.
@@ -96,7 +96,7 @@ public class PlayerStore {
      * @return The number of players.
      */
     public int getNumberOfPlayers() {
-        return players.size();
+        return 0;
     }
 
     public List<Player> getAllExcept(Player pException) {

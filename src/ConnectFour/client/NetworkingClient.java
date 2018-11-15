@@ -47,7 +47,6 @@ public class NetworkingClient extends Client {
         switch (command) {
             case "NEWENEMY":
                 String enemyName = parameter;
-                gameLogic.onNewEnemy(enemyName);
                 break;
             default:
                 break;

@@ -99,7 +99,7 @@ public class GameWindow extends SasApp {
 
     public void mouseMoved() {
 
-        for (int i = 0; i < 7; i++) {
+        /*for (int i = 0; i < 7; i++) {
             if (arrowGraphics[6] != null) {
                 if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
                     arrowGraphics[i].setColor(playerOneColor);
@@ -107,8 +107,7 @@ public class GameWindow extends SasApp {
                     arrowGraphics[i].setColor("black");
                 }
             }
-        }
-
+        }*/
     }
 
     /**
