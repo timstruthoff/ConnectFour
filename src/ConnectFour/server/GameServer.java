@@ -12,12 +12,16 @@ public class GameServer extends Server {
     
     // NOTE: circular reference not used yet.
     ServerGameLogic servergamelogic = new ServerGameLogic(this);
+    
+    String newline = System.getProperty("line.separator");
 
     /**
      * Constructor for objects of class SpielServer
      */
     public GameServer() {
         super(1234);
+        
+        System.out.println("Server: Started.");
     }
 
     public void processNewConnection(String pClientIP, int pClientPort) {
@@ -28,7 +32,12 @@ public class GameServer extends Server {
 
     }
 
+    @Override
     public void processMessage(String pClientIP, int pClientPort, String pMessage) {
+        
+        System.out.println("Client message from " + pClientIP + ":" + pClientPort + newline + pMessage);
+        
+        
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
 
@@ -61,6 +70,7 @@ public class GameServer extends Server {
      * @param pClientPort
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
+        
         int playerNumber = servergamelogic.getNumberOfPlayers();
 
         // Check how many players are already on the server.
@@ -115,7 +125,7 @@ public class GameServer extends Server {
                 
                 
                 if(servergamelogic.hasGameEnded()) {
-                    this.onGameEnd();
+                    this.sendGameEnded();
                 } else {
                     
                     servergamelogic.switchPlayers();
@@ -126,7 +136,10 @@ public class GameServer extends Server {
         }
     }
     
-    public void onGameEnd() {
+    /**
+     * Send a message notifying the players that the game has ended and whether they have won or not.
+     */
+    public void sendGameEnded() {
         
         // Notify the player that the game has ended and whether they won or not.
         Player winner = servergamelogic.getCurrentPlayer();
@@ -136,7 +149,13 @@ public class GameServer extends Server {
         this.send(looser.getIpAddress(), looser.getPort(), "END false");
     }
     
-    public void playerDroppedHandler (int pPlayerNumber, int pColumn, int pRow) {
+    /**
+     * Handle a player's move in which they drop a chip in a specific column.
+     * @param pPlayerNumber The number of the player who dropped a chip.
+     * @param pColumn
+     * @param pRow 
+     */
+    public void handlePlayerDrop (int pPlayerNumber, int pColumn, int pRow) {
         System.out.println("DROP Player: " + pPlayerNumber + " Column: " + pColumn + " Row: " + pRow);
         
         // Send message to other player

@@ -162,7 +162,7 @@ public class ServerGameLogic {
             numberOfChipsInColumn[pColumn]++;
             
             // Notify game server of successful drop
-            gameServer.playerDroppedHandler(pPlayerNumber, pColumn, row);
+            gameServer.handlePlayerDrop(pPlayerNumber, pColumn, row);
         }
     }
 

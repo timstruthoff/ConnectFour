@@ -14,6 +14,8 @@ public class Start {
 
     public Start() {
         
+        System.out.println("Start: App started.");
+        
         // Prepare options which the user can select when starting the app.
         Object[] options = {"Start server and play as a client.", "Only play as a client", "Cancel"};
 

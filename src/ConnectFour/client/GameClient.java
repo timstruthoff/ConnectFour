@@ -14,12 +14,17 @@ import javax.swing.JOptionPane;
 public class GameClient {
 
     public GameClient() {
+        
+        System.out.println("Client: Started.");
 
         // Display dialogue for selecting a server ip.
         String serverIP = (String) JOptionPane.showInputDialog(null, "What is your server ip?", "The game is starting soon!!", JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
 
         // Check if server ip is valid.
         if ((serverIP != null) && (serverIP.length() > 6)) {
+            
+            System.out.println("Client: User selected IP " + serverIP);
+            
             // Start new game window with selected server ip.
             NetworkingClient client = new NetworkingClient(serverIP);
             GameWindow window = new GameWindow(client);
