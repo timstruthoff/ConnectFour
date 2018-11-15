@@ -224,8 +224,8 @@ public class ServerGameLogic {
      * @return Boolean indicating whether the name is taken.
      */
     public boolean isNameAlreadyTaken(String pName) {
-        boolean hasPlayerOneTheName = playerOne.getName().equals(pName);
-        boolean hasPlayerTwoTheName = playerTwo.getName().equals(pName);
+        boolean hasPlayerOneTheName = playerOne != null && playerOne.getName().equals(pName);
+        boolean hasPlayerTwoTheName = playerTwo != null && playerTwo.getName().equals(pName);
         return !hasPlayerOneTheName && !hasPlayerTwoTheName;
     }
 
