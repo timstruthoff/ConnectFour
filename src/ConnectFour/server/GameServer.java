@@ -25,7 +25,7 @@ public class GameServer extends Server {
     }
 
     public void processNewConnection(String pClientIP, int pClientPort) {
-
+        System.out.println("New connection from " + pClientIP + ":" + pClientPort);
     }
 
     public void processClosingConnection(String pClientIP, int pClientPort) {
@@ -40,12 +40,23 @@ public class GameServer extends Server {
         
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
+        
+        String command = "";
+        String parameter = "";
+        
+        // Check if there are paramters in the message.
+        if (commandEndIndex > -1) {
+            // Get command from message
+            command = pMessage.substring(0, commandEndIndex);
+            
+            // Get parameter from message after space
+            parameter = pMessage.substring(commandEndIndex + 1);
+        } else {
+            command = pMessage;
+        }
+        
 
-        // Get command from message
-        String command = pMessage.substring(0, commandEndIndex);
-
-        // Get parameter from message after space
-        String parameter = pMessage.substring(commandEndIndex + 1);
+        
 
         switch (command) {
             case "START":
