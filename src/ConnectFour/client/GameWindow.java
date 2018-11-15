@@ -16,12 +16,17 @@ public class GameWindow extends SasApp {
     private String playerOneColor = "blue";
     private String playerTwoColor = "red";
 
-    private NetworkingClient client;
+    private ConnectFourGame gameLogic;
 
-    public GameWindow(NetworkingClient gameClient) {
+    public GameWindow() {
+
         this.drawPlayingField();
         this.drawArrows();
         myView.setSize(1000, 600);
+    }
+
+    public void setGameLogic(ConnectFourGame pGameLogic) {
+        gameLogic = pGameLogic;
     }
 
     public String askForPlayerName() {
@@ -86,14 +91,16 @@ public class GameWindow extends SasApp {
         Object o = myView.getLastClicked();
         if (o instanceof Arrow) {
             Arrow p = (Arrow) o;
-            // this.drop(p.getColumn(), playerColor);
-            myView.zeigeInfoDialog("Es wurde folgende Spalte ausgewählt: " + (p.getColumn() + 1));
+
+            gameLogic.drop(p.getColumn());
+            System.out.println("Window: Drop in column " + p.getColumn());
         }
     }
 
     public void mouseMoved() {
-        if (arrowGraphics[6] != null) {
-            for (int i = 0; i < 7; i++) {
+
+        for (int i = 0; i < 7; i++) {
+            if (arrowGraphics[6] != null) {
                 if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
                     arrowGraphics[i].setColor(playerOneColor);
                 } else {

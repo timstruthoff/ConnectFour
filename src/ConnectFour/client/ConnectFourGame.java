@@ -1,6 +1,6 @@
 package ConnectFour.client;
 
-import ConnectFour.server.Player;
+import ConnectFour.server.PlayerStore.Player;
 
 /**
  * Write a description of class GameServer here.
@@ -64,7 +64,7 @@ public class ConnectFourGame {
      * @param pColumn The column where the mark should be set.
      * @param pRow The row where the mark should be set.
      */
-    public void setMark(int pColumn, int pRow) {
+    public void setMark(int pColumn, int pRow, int pPlayerNumber) {
         if (playingField[pColumn][pRow].equals(" ")) {
             if (currentPlayer == playerOne) {
                 playingField[pColumn][pRow] = "X";
@@ -89,17 +89,10 @@ public class ConnectFourGame {
      *
      * @param pColumn
      * @param pColor
+     * @return The row position of the chip.
      */
-    public void drop(int pColumn, String pColor) {
-
-        // Calculate the position of the dropped chip.
-        int row = 6 - numberOfChipsInColumns[pColumn];
-
-        // Change the filed color at that position.
-        this.setMark(pColumn, row);
-
-        // Increase the number of chips in that column.
-        numberOfChipsInColumns[pColumn] = numberOfChipsInColumns[pColumn] + 1;
+    public void drop(int pColumn) {
+        client.sendDrop(pColumn);
     }
 
     public void switchPlayers() {

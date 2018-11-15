@@ -62,4 +62,8 @@ public class NetworkingClient extends Client {
         this.send("LOGIN " + pName);
     }
 
+    public void sendDrop(int pColumn) {
+        this.send("DROP " + pColumn);
+    }
+
 }

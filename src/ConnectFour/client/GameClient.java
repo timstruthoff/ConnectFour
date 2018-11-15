@@ -27,11 +27,13 @@ public class GameClient {
 
             // Start new game window with selected server ip.
             NetworkingClient client = new NetworkingClient(serverIP);
-            GameWindow window = new GameWindow(client);
+            GameWindow window = new GameWindow();
             ConnectFourGame gameLogic = new ConnectFourGame(client, window);
 
             gameLogic.setWindow(window);
             gameLogic.setClient(client);
+
+            window.setGameLogic(gameLogic);
         }
 
     }
