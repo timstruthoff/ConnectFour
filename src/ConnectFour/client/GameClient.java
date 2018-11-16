@@ -34,6 +34,8 @@ public class GameClient {
             gameLogic.setClient(client);
 
             window.setGameLogic(gameLogic);
+
+            client.setGameLogic(gameLogic);
         }
 
     }

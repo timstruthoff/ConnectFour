@@ -107,15 +107,18 @@ public class GameServer extends Server {
             String currentIp = currentPlayer.getIpAddress();
             int currentPort = currentPlayer.getPort();
 
+            // Notify newly joined player that this player was already in the game.
+            this.send(pClientIp, pClientPort, "NEWENEMY " + currentPlayer.getName());
+
             // If player is not the one that has just joined
-            if (!(currentIp.equals(pClientIp) && currentPort == pClientPort)) {
+            if (currentIp.equals(pClientIp) && currentPort == pClientPort) {
+                System.out.println("Joined: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+            } else {
                 System.out.println("Other: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
 
                 // Notify player that a new enemy has joined.
-                String message = "NEWENEMY " + currentPlayer.getName() + " " + currentIp + " " + currentPort;
-                this.send(currentIp, currentPort, message);
-            } else {
-                System.out.println("Joined: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+                this.send(currentIp, currentPort, "NEWENEMY " + p.getName());
+
             }
         }
     }

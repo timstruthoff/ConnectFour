@@ -1,14 +1,19 @@
 package ConnectFour.client;
 
 import EgJavaLib2.egSas.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class GameWindow extends SasApp {
 
     private Cell[][] playingField = new Cell[7][7];
 
-    private Text playerOneGraphic = new Text(500, 150, "Name Player 1");
-    private Text playerTwoGraphic = new Text(500, 200, "Name Player 2");
+    private List<Text> playerNameTexts = new ArrayList<Text>();
+    private int playerTextVerticalSpacing = 50;
+    private int playerTextYStart = 150;
+    private int playerTextXStart = 500;
+
     private Text resultGraphic = new Text(500, 250, "Game not active");
     private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
     private Arrow[] arrowGraphics = new Arrow[7];
@@ -71,16 +76,10 @@ public class GameWindow extends SasApp {
         activePlayerIndicatorGraphic.moveTo(465, 205);
     }
 
-    public void setPlayerOneName(String pName) {
-        playerOneGraphic.setText(pName);
-    }
-
-    public void setPlayerTwoName(String pName) {
-        playerTwoGraphic.setText(pName);
-    }
-
-    public String showNameDialog() {
-        return myView.zeigeEingabeDialog("Wie heißt du?");
+    public void addPlayer(String pName) {
+        int yCoordinate = playerTextYStart + playerNameTexts.size() * playerTextVerticalSpacing;
+        Text t = new Text(playerTextXStart, yCoordinate, pName);
+        playerNameTexts.add(t);
     }
 
     public void setResultGraphicText(String pText) {

@@ -1,5 +1,8 @@
 package ConnectFour.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Write a description of class GameServer here.
  *
@@ -14,6 +17,9 @@ public class ConnectFourGame {
     private String[][] playingField = new String[7][7];
     private int numberOfMarks;
 
+    private List<String> playerNames = new ArrayList<String>();
+    private String myName;
+
     private boolean gameStarted;
 
     private String gameResult;
@@ -24,8 +30,6 @@ public class ConnectFourGame {
 
         gameStarted = false;
         numberOfMarks = 0;
-        //playerOne = new Player("Player 1");
-        //playerTwo = new Player("Player 2");
 
         for (int column = 0; column < 7; column++) {
             for (int row = 0; row < 7; row++) {
@@ -40,10 +44,15 @@ public class ConnectFourGame {
     public void startGame() {
 
         // Ask for player name and then send it to the server.
-        String playerName = window.askForPlayerName();
-        client.sendPlayerName(playerName);
+        myName = window.askForPlayerName();
+        client.sendPlayerName(myName);
 
         gameStarted = true;
+    }
+
+    public void addPlayer(String pName) {
+        playerNames.add(pName);
+        window.addPlayer(pName);
     }
 
     /**

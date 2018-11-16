@@ -27,6 +27,10 @@ public class NetworkingClient extends Client {
         this.initialSetup();
     }
 
+    public void setGameLogic(ConnectFourGame pGameLogic) {
+        gameLogic = pGameLogic;
+    }
+
     public void initialSetup() {
         this.send("START");
     }
@@ -53,11 +57,15 @@ public class NetworkingClient extends Client {
             case "OK":
                 break;
             case "NEWENEMY":
-                String enemyName = parameter;
+                this.onNewPlayer(parameter);
                 break;
             default:
                 break;
         }
+    }
+
+    public void onNewPlayer(String pName) {
+        gameLogic.addPlayer(pName);
     }
 
     public void setWindow(GameWindow pWindow) {
