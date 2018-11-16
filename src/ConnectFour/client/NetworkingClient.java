@@ -35,6 +35,8 @@ public class NetworkingClient extends Client {
     @Override
     public void processMessage(String pMessage) {
 
+        System.out.println(pMessage);
+
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
 
