@@ -35,9 +35,9 @@ public class GameServer extends Server {
     }
 
     @Override
-    public void processMessage(String pClientIP, int pClientPort, String pMessage) {
+    public void processMessage(String pClientIp, int pClientPort, String pMessage) {
 
-        System.out.println("Client message from " + pClientIP + ":" + pClientPort + newline + pMessage);
+        System.out.println("Client message from " + pClientIp + ":" + pClientPort + newline + pMessage);
 
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
@@ -58,16 +58,16 @@ public class GameServer extends Server {
 
         switch (command) {
             case "START":
-                this.onStartMessage(pClientIP, pClientPort);
+                this.onStartMessage(pClientIp, pClientPort);
                 break;
             case "LOGIN":
-                this.onLoginMessage(pClientIP, pClientPort, parameter);
+                this.onLoginMessage(pClientIp, pClientPort, parameter);
                 break;
             case "DROP":
-                this.onDropMessage(pClientIP, pClientPort, parameter);
+                this.onDropMessage(pClientIp, pClientPort, parameter);
                 break;
             default:
-                this.send(pClientIP, pClientPort, "ERR Invalid command!");
+                this.send(pClientIp, pClientPort, "ERR Invalid command!");
                 break;
         }
     }
@@ -87,17 +87,33 @@ public class GameServer extends Server {
     /**
      * Process login messages from the client.
      *
-     * @param pClientIP
+     * @param pClientIp
      * @param pClientPort
      * @param pName
      */
-    public void onLoginMessage(String pClientIP, int pClientPort, String pName) {
-        Player p = servergamelogic.addPlayer(pName, pClientIP, pClientPort);
-        this.send(pClientIP, pClientPort, "OK " + p.getID());
+    public void onLoginMessage(String pClientIp, int pClientPort, String pName) {
 
-        // Notifying all players that a new enemy has joined.
-        this.sendToAll("NEWENEMY " + p.getID() + " " + p.getName() + " " + p.getIpAddress() + " " + p.getPort());
+        System.out.println("Login call: " + pName + pClientIp + pClientPort);
 
+        Player p = servergamelogic.addPlayer(pName, pClientIp, pClientPort);
+        this.send(pClientIp, pClientPort, "OK ");
+
+        List<Player> allPlayers = servergamelogic.getPlayerStore().getAllPlayers();
+
+        for (Player currentPlayer : allPlayers) {
+            String currentIp = currentPlayer.getIpAddress();
+            int currentPort = currentPlayer.getPort();
+
+            // If player is not the one that has just joined
+            System.out.println(currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+            if (!(currentIp.equals(pClientIp) && currentPort == pClientPort)) {
+                System.out.println("true " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+
+                // Notify player that a new enemy has joined.
+                String message = "NEWENEMY " + currentPlayer.getName() + " " + currentIp + " " + currentPort;
+                this.send(currentIp, currentPort, message);
+            }
+        }
     }
 
     /**
