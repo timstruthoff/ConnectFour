@@ -41,7 +41,7 @@ public class ServerGameLogic {
      * @return The player.
      */
     public Player addPlayer(String pName, String pIpAddress, int pPort) {
-        Player p = playerStore.addPlayer(pName, pName, pPort);
+        Player p = playerStore.addPlayer(pName, pIpAddress, pPort);
         return p;
     }
 

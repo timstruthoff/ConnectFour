@@ -16,6 +16,10 @@ public class PlayerStore {
 
     private List<Player> players = new ArrayList<Player>();
 
+    public List<Player> getAllPlayers() {
+        return players;
+    }
+
     /**
      * Gets a player by the socket through which they connected.
      *
@@ -86,7 +90,7 @@ public class PlayerStore {
      */
     public Player addPlayer(String pName, String pClientIP, int pPort) {
         Player p = new Player(pName, pClientIP, pPort);
-        players.add(new Player(pName, pClientIP, pPort));
+        players.add(p);
         return p;
     }
 
