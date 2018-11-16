@@ -44,14 +44,13 @@ public class PlayerStoreTest {
     @Test
     public void testGetPlayerBySocket() {
         System.out.println("getPlayerBySocket");
-        String pIpAddress = "";
-        int pPort = 0;
+        String pIpAddress = "192.168.2.4";
+        int pPort = 12345;
         PlayerStore instance = new PlayerStore();
-        Player expResult = null;
-        Player result = instance.getPlayerBySocket(pIpAddress, pPort);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player p = instance.addPlayer(pIpAddress, pIpAddress, pPort);
+
+        assertEquals(p.getIpAddress(), pIpAddress);
+        assertEquals(p.getPort(), pPort);
     }
 
     /**

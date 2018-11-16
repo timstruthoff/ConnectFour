@@ -56,11 +56,12 @@ public class PlayerTest {
     @Test
     public void testSetName() {
         System.out.println("setName");
-        String pName = "";
-        Player instance = null;
-        instance.setName(pName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        Player instance = new Player("TestName", "192.168.2.3", 12345);
+        instance.setName("TestName2");
+        String expResult = "TestName2";
+        String result = instance.getName();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -69,12 +70,11 @@ public class PlayerTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        Player instance = null;
-        String expResult = "";
+
+        Player instance = new Player("TestName", "192.168.2.3", 12345);
+        String expResult = "TestName";
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,12 +83,11 @@ public class PlayerTest {
     @Test
     public void testGetIpAddress() {
         System.out.println("getIpAddress");
-        Player instance = null;
-        String expResult = "";
+
+        Player instance = new Player("TestName", "192.168.2.3", 12345);
+        String expResult = "192.168.2.3";
         String result = instance.getIpAddress();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -97,12 +96,11 @@ public class PlayerTest {
     @Test
     public void testGetPort() {
         System.out.println("getPort");
-        Player instance = null;
-        int expResult = 0;
+
+        Player instance = new Player("TestName", "192.168.2.3", 12345);
+        int expResult = 12345;
         int result = instance.getPort();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
