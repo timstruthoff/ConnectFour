@@ -37,7 +37,7 @@ public class GameServer extends Server {
     @Override
     public void processMessage(String pClientIp, int pClientPort, String pMessage) {
 
-        System.out.println("Client message from " + pClientIp + ":" + pClientPort + newline + pMessage);
+        System.out.println("// Client message from " + pClientIp + ":" + pClientPort + newline + "// " + pMessage);
 
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
@@ -100,18 +100,22 @@ public class GameServer extends Server {
 
         List<Player> allPlayers = servergamelogic.getPlayerStore().getAllPlayers();
 
+        System.out.println("Searching for other players:");
+
+        // Sending a message to all other players indicating that a new player has joined.
         for (Player currentPlayer : allPlayers) {
             String currentIp = currentPlayer.getIpAddress();
             int currentPort = currentPlayer.getPort();
 
             // If player is not the one that has just joined
-            System.out.println(currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
             if (!(currentIp.equals(pClientIp) && currentPort == pClientPort)) {
-                System.out.println("true " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+                System.out.println("Other: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
 
                 // Notify player that a new enemy has joined.
                 String message = "NEWENEMY " + currentPlayer.getName() + " " + currentIp + " " + currentPort;
                 this.send(currentIp, currentPort, message);
+            } else {
+                System.out.println("Joined: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
             }
         }
     }

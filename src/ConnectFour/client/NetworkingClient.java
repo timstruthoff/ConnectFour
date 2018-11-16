@@ -11,8 +11,11 @@ import javax.swing.JOptionPane;
  */
 public class NetworkingClient extends Client {
 
+    private int id = (int) (Math.random() * 899 + 100);
     private GameWindow window;
     private ConnectFourGame gameLogic;
+
+    String newline = System.getProperty("line.separator");
 
     /**
      * Constructor for objects of class SpielClient
@@ -35,7 +38,7 @@ public class NetworkingClient extends Client {
     @Override
     public void processMessage(String pMessage) {
 
-        System.out.println(pMessage);
+        System.out.println("\\\\ Server to client " + id + ":" + newline + "\\\\ " + pMessage);
 
         // Get the position where the string ends
         int commandEndIndex = pMessage.indexOf(" ");
@@ -47,6 +50,8 @@ public class NetworkingClient extends Client {
         String parameter = pMessage.substring(commandEndIndex + 1);
 
         switch (command) {
+            case "OK":
+                break;
             case "NEWENEMY":
                 String enemyName = parameter;
                 break;
