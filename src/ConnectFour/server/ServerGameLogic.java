@@ -22,7 +22,7 @@ public class ServerGameLogic {
 
     private int numberOfColumns = 7;
     private int numberOfRows = 7;
-    private String[][] playingField = new String[numberOfColumns][7];
+    private String[][] playingField = new String[numberOfColumns][numberOfRows];
     private int numberOfChipsInColumn[] = {0, 0, 0, 0, 0, 0, 0};
     private boolean gameStarted;
     private int numberOfMarks;
@@ -30,6 +30,15 @@ public class ServerGameLogic {
 
     public ServerGameLogic(GameServer pGameServer) {
         gameServer = pGameServer;
+
+    }
+
+    public void cleanPlayingField() {
+        for (int column = 0; column < numberOfColumns; column++) {
+            for (int row = 0; row < numberOfRows; row++) {
+                playingField[column][row] = " ";
+            }
+        }
     }
 
     /**
