@@ -101,12 +101,19 @@ public class ServerGameLogic {
     }
 
     public void nextPlayer() {
+
+        // Turn to next player.
         currentPlayerNumber++;
-        if (currentPlayerNumber == playerStore.getNumberOfPlayers()) {
+
+        // Check if at end of player list.
+        if (currentPlayerNumber >= playerStore.getNumberOfPlayers()) {
+
+            // Go to first player
             currentPlayerNumber = 0;
         }
-        currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
 
+        // Notify players whose turn it is now.
+        currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
         this.gameServer.sendTurn(currentPlayer.getName());
     }
 
