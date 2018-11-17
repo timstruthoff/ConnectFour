@@ -103,6 +103,15 @@ public class PlayerStore {
         return 0;
     }
 
+    /**
+     * Get the position of the player in the player list.
+     *
+     * @return The position of the player.
+     */
+    public int getNumberOfPlayer(Player pPlayer) {
+        return players.indexOf(pPlayer);
+    }
+
     public List<Player> getAllExcept(Player pException) {
         List<Player> returnList = new ArrayList<Player>();
 

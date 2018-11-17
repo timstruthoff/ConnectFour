@@ -125,8 +125,25 @@ public class PlayerStoreTest {
         int expResult = 0;
         int result = instance.getNumberOfPlayers();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNumberOfPlayer method, of class PlayerStore.
+     */
+    @Test
+    public void testGetNumberOfPlayer() {
+        System.out.println("getNumberOfPlayer");
+        PlayerStore instance = new PlayerStore();
+        Player p = instance.addPlayer("TestName", "192.168.2.3", 12345);
+
+        int expResult = 0;
+        int result = instance.getNumberOfPlayer(p);
+        assertEquals(expResult, result);
+
+        Player p2 = instance.addPlayer("TestName2", "192.168.2.3", 12346);
+        int expResult2 = 1;
+        int result2 = instance.getNumberOfPlayer(p2);
+        assertEquals(expResult2, result2);
     }
 
     /**
