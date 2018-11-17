@@ -19,6 +19,7 @@ public class ServerGameLogic {
     private PlayerStore playerStore = new PlayerStore();
     private int currentPlayerNumber = 0;
     private Player currentPlayer;
+    private PlayingFieldModel playingFieldModel = new PlayingFieldModel(7, 7);
 
     public ServerGameLogic(GameServer pGameServer) {
         gameServer = pGameServer;
@@ -38,6 +39,55 @@ public class ServerGameLogic {
         return p;
     }
 
+    /**
+     * Check whether the player specified by the socket can drop a chip in the
+     * specified column number.
+     *
+     * @param pPlayerIpAddress The player's ip address.
+     * @param pPlayerPort The player's port
+     * @param pColumn The column in which the chip should be dropped.
+     * @return A string either being "SUCCESS" if the player can drop or the
+     * error message if the player can't drop.
+     */
+    public String ableToDrop(String pPlayerIpAddress, int pPlayerPort, int pColumn) {
+        Player p = playerStore.getPlayerBySocket(pPlayerIpAddress, pPlayerPort);
+        if (p == null) {
+            return "Player not found! Socket: " + pPlayerIpAddress + ":" + pPlayerPort;
+        }
+
+        // Check if it's this player's turn.
+        if (playerStore.getNumberOfPlayer(p) != currentPlayerNumber) {
+            return "It is not this player's turn!";
+        }
+
+        // check if the column numebr is valid.
+        if (!playingFieldModel.isValidColumnNumber(pColumn)) {
+            return "Invalid column number!";
+        }
+
+        // Check if there is a free spot in the selected column.
+        if (playingFieldModel.getFreeRowInColumn(pColumn) < 0) {
+            return "The selected column " + pColumn + " is full!";
+        }
+
+        return "SUCCESS";
+    }
+
+    /**
+     *
+     * @param pPlayerIpAddress
+     * @param pPlayerPort
+     * @param pColumn
+     * @return The row in which the chip was dropped.
+     */
+    public int drop(String pPlayerIpAddress, int pPlayerPort, int pColumn) {
+        int row = this.playingFieldModel.getFreeRowInColumn(pColumn);
+        Player p = this.playerStore.getPlayerBySocket(pPlayerIpAddress, row);
+        this.playingFieldModel.setMark(p, pColumn, row);
+        this.nextPlayer();
+        return row;
+    }
+
     public PlayerStore getPlayerStore() {
         return playerStore;
     }
@@ -52,7 +102,12 @@ public class ServerGameLogic {
 
     public void nextPlayer() {
         currentPlayerNumber++;
+        if (currentPlayerNumber == playerStore.getNumberOfPlayers()) {
+            currentPlayerNumber = 0;
+        }
         currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
+
+        this.gameServer.sendTurn(currentPlayer.getName());
     }
 
 }

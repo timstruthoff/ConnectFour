@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class GameServer extends Server {
 
-    // NOTE: circular reference not used yet.
     ServerGameLogic servergamelogic = new ServerGameLogic(this);
 
     String newline = System.getProperty("line.separator");
@@ -133,23 +132,22 @@ public class GameServer extends Server {
     public void onDropMessage(String pClientIP, int pClientPort, String pColumn) {
         int column = Integer.parseInt(pColumn);
 
-        if (servergamelogic.isValidColumnNumber(column)) {
-            if (servergamelogic.isColumnFull(column)) {
-                this.send(pClientIP, pClientPort, "ERR column full");
-            } else {
-                Player p = servergamelogic.getPlayerStore().getPlayerBySocket(pClientIP, pClientPort);
+        Player p = servergamelogic.getPlayerStore().getPlayerBySocket(pClientIP, pClientPort);
 
-                // Check if player exists
-                if (p != null) {
+        if (p == null) {
+            throw new IllegalArgumentException("Player not found!");
+        }
+        String ableToDrop = this.servergamelogic.ableToDrop(pClientIP, pClientPort, column);
 
-                    // Reflect drop in game server model and then notify game server of new drop.
-                    servergamelogic.drop(p.getID(), column);
-                } else {
-                    this.send(pClientIP, pClientPort, "ERR No player found");
-                }
-            }
+        if (ableToDrop.equals("SUCCESS")) {
+            int row = servergamelogic.drop(pClientIP, pClientPort, column);
+
+            System.out.println("DROP Player: " + p.getName() + " Column: " + pColumn + " Row: " + row);
+
+            // Send message to other player
+            this.sendToAll("DROPPED " + p.getName() + " " + pColumn + " " + row);
         } else {
-            this.send(pClientIP, pClientPort, "ERR invalid column selected");
+            this.send(pClientIP, pClientPort, "ERR " + ableToDrop);
         }
     }
 
@@ -170,17 +168,13 @@ public class GameServer extends Server {
     }
 
     /**
-     * Handle a player's move in which they drop a chip in a specific column.
+     * Send a message to all clients indicating, that it's another player's
+     * turn.
      *
-     * @param pPlayerNumber The number of the player who dropped a chip.
-     * @param pColumn
-     * @param pRow
+     * @param pName The socket of the player whose turn it is.
      */
-    public void handlePlayerDrop(String pPlayerId, int pColumn, int pRow) {
-        System.out.println("DROP Player: " + pPlayerId + " Column: " + pColumn + " Row: " + pRow);
-
-        // Send message to other player
-        this.sendToAll("DROPPED " + pPlayerId + " " + pColumn + " " + pRow);
+    public void sendTurn(String pName) {
+        this.sendToAll("TURN " + pName);
     }
 
 }
