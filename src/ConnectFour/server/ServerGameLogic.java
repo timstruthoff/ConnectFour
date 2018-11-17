@@ -74,16 +74,29 @@ public class ServerGameLogic {
     }
 
     /**
+     * Drop a chip in a column
      *
-     * @param pPlayerIpAddress
-     * @param pPlayerPort
-     * @param pColumn
+     * @param pPlayerIpAddress The ip address of the player who wants to drop
+     * the chip.
+     * @param pPlayerPort The port of the player who wants to drop the chip.
+     * @param pColumn the column in which the chip should be dropped.
      * @return The row in which the chip was dropped.
      */
     public int drop(String pPlayerIpAddress, int pPlayerPort, int pColumn) {
+
+        // Get the topmost free row.
         int row = this.playingFieldModel.getFreeRowInColumn(pColumn);
-        Player p = this.playerStore.getPlayerBySocket(pPlayerIpAddress, row);
+
+        // Get the player who dropped the chip.
+        Player p = this.playerStore.getPlayerBySocket(pPlayerIpAddress, pPlayerPort);
+        if (p == null) {
+            throw new IllegalArgumentException("Player not found!");
+        }
+
+        // Set the chip in the playing field.
         this.playingFieldModel.setMark(p, pColumn, row);
+
+        // Turn to the next player.
         this.nextPlayer();
         return row;
     }

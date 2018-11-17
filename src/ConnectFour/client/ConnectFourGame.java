@@ -15,6 +15,7 @@ public class ConnectFourGame {
     private GameWindow window;
 
     private List<String> playerNames = new ArrayList<String>();
+    private String[] playerColors = {"blue", "red", "green"};
     private String myName;
 
     public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow) {
@@ -52,8 +53,18 @@ public class ConnectFourGame {
      * @param pColumn The column where the mark should be set.
      * @param pRow The row where the mark should be set.
      */
-    public void setMark(int pColumn, int pRow) {
+    public void setMark(String pPlayerName, int pColumn, int pRow) {
+        int playerNumber = playerNames.indexOf(pPlayerName);
 
+        // Checking if the player was found in the array.
+        if (playerNumber < 0) {
+            throw new IllegalArgumentException("Player name not found!");
+        }
+
+        // Getting the corresponding color.
+        String color = playerColors[playerNumber];
+
+        this.window.setFieldCellColor(pColumn, pRow, color);
     }
 
     /**

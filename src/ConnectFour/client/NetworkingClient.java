@@ -84,6 +84,8 @@ public class NetworkingClient extends Client {
             throw new IllegalArgumentException("Invalid row number " + row + ".");
         }
 
+        this.gameLogic.setMark(playerName, column, row);
+
         System.out.println(Arrays.toString(p.toArray()));
         System.out.println("Name: " + playerName + " column: " + column + " row: " + row);
     }
