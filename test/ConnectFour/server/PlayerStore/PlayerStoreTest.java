@@ -125,6 +125,12 @@ public class PlayerStoreTest {
         int expResult = 0;
         int result = instance.getNumberOfPlayers();
         assertEquals(expResult, result);
+
+        instance.addPlayer("test", "192.16.2.3", 12345);
+        instance.addPlayer("test2", "192.16.2.3", 12346);
+        int expResult2 = 2;
+        int result2 = instance.getNumberOfPlayers();
+        assertEquals(expResult2, result2);
     }
 
     /**

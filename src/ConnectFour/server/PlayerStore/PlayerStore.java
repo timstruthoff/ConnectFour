@@ -100,7 +100,7 @@ public class PlayerStore {
      * @return The number of players.
      */
     public int getNumberOfPlayers() {
-        return 0;
+        return players.size();
     }
 
     /**
