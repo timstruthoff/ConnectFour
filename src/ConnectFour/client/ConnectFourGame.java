@@ -25,6 +25,14 @@ public class ConnectFourGame {
 
     }
 
+    public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow, String pPlayerName) {
+        client = pClient;
+        window = pWindow;
+        myName = pPlayerName;
+        client.sendPlayerName(myName);
+
+    }
+
     public void startGame() {
 
         // Ask for player name and then send it to the server.
