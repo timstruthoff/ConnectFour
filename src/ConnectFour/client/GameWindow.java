@@ -7,7 +7,10 @@ import javax.swing.JOptionPane;
 
 public class GameWindow extends SasApp {
 
-    private Cell[][] playingField = new Cell[7][7];
+    private int numberOfColumns = 7;
+    private int numberOfRows = 7;
+
+    private Cell[][] playingField = new Cell[numberOfColumns][numberOfRows];
 
     private List<Text> playerNameTexts = new ArrayList<Text>();
     private int playerTextVerticalSpacing = 50;
@@ -17,9 +20,6 @@ public class GameWindow extends SasApp {
     private Text resultGraphic = new Text(500, 250, "Game not active");
     private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
     private Arrow[] arrowGraphics = new Arrow[7];
-
-    private String playerOneColor = "blue";
-    private String playerTwoColor = "red";
 
     private ConnectFourGame gameLogic;
 
@@ -66,16 +66,6 @@ public class GameWindow extends SasApp {
         }
     }
 
-    public void setPlayerOneActive() {
-        activePlayerIndicatorGraphic.setHidden(false);
-        activePlayerIndicatorGraphic.moveTo(465, 155);
-    }
-
-    public void setPlayerTwoActive() {
-        activePlayerIndicatorGraphic.setHidden(false);
-        activePlayerIndicatorGraphic.moveTo(465, 205);
-    }
-
     public void addPlayer(String pName) {
         int yCoordinate = playerTextYStart + playerNameTexts.size() * playerTextVerticalSpacing;
         Text t = new Text(playerTextXStart, yCoordinate, pName);
@@ -120,6 +110,14 @@ public class GameWindow extends SasApp {
      */
     public void setFieldCellColor(int pColumn, int pRow, String pColor) {
         playingField[pColumn][pRow].setColor(pColor);
+    }
+
+    public int getNumberOfColumns() {
+        return numberOfColumns;
+    }
+
+    public int getNumberOfRows() {
+        return numberOfRows;
     }
 
 }

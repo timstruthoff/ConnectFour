@@ -1,6 +1,8 @@
 package ConnectFour.client;
 
 import EgJavaLib2.netzwerk.*;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,20 +46,18 @@ public class NetworkingClient extends Client {
 
         System.out.println("\\\\ Server to client " + id + ":" + newline + "\\\\ " + pMessage);
 
-        // Get the position where the string ends
-        int commandEndIndex = pMessage.indexOf(" ");
-
-        // Get command from message
-        String command = pMessage.substring(0, commandEndIndex);
-
-        // Get parameter from message after space
-        String parameter = pMessage.substring(commandEndIndex + 1);
+        List<String> messageParts = Arrays.asList(pMessage.split(" "));
+        String command = messageParts.get(0);
+        List<String> parameters = messageParts.subList(1, messageParts.size());
 
         switch (command) {
             case "OK":
                 break;
             case "NEWENEMY":
-                this.onNewPlayer(parameter);
+                this.onNewPlayer(parameters.get(0));
+                break;
+            case "DROPPED":
+                this.onDropped(parameters);
                 break;
             default:
                 break;
@@ -66,6 +66,26 @@ public class NetworkingClient extends Client {
 
     public void onNewPlayer(String pName) {
         gameLogic.addPlayer(pName);
+    }
+
+    public void onDropped(List<String> p) {
+        if (p.size() != 3) {
+            throw new IllegalArgumentException("Invalid number of arguments in dropped command from server.");
+        }
+
+        String playerName = p.get(0);
+        int column = Integer.parseInt(p.get(1));
+        if (column < 0 && column >= window.getNumberOfColumns()) {
+            throw new IllegalArgumentException("Invalid column number " + column + ".");
+        }
+
+        int row = Integer.parseInt(p.get(2));
+        if (row < 0 && row >= window.getNumberOfRows()) {
+            throw new IllegalArgumentException("Invalid row number " + row + ".");
+        }
+
+        System.out.println(Arrays.toString(p.toArray()));
+        System.out.println("Name: " + playerName + " column: " + column + " row: " + row);
     }
 
     public void setWindow(GameWindow pWindow) {
