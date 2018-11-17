@@ -5,6 +5,8 @@
  */
 package ConnectFour.server;
 
+import ConnectFour.server.PlayerStore.Player;
+
 /**
  *
  * @author tmst
@@ -13,13 +15,13 @@ public class PlayingFieldModel {
 
     private final int numberOfColumns;
     private final int numberOfRows;
-    private String[][] playingField;
+    private Player[][] playingField;
     private int numberOfMarks = 0;
 
     public PlayingFieldModel(int pNumberOfColumns, int pNumberOfRows) {
         numberOfColumns = pNumberOfColumns;
         numberOfRows = pNumberOfRows;
-        playingField = new String[numberOfColumns][numberOfRows];
+        playingField = new Player[numberOfColumns][numberOfRows];
         this.cleanPlayingField();
     }
 
@@ -29,7 +31,7 @@ public class PlayingFieldModel {
     public void cleanPlayingField() {
         for (int column = 0; column < numberOfColumns; column++) {
             for (int row = 0; row < numberOfRows; row++) {
-                playingField[column][row] = "";
+                playingField[column][row] = null;
             }
         }
     }
@@ -53,7 +55,7 @@ public class PlayingFieldModel {
     public int getFreeRowInColumn(int pColumn) {
         if (this.isValidColumnNumber(pColumn)) {
             for (int row = numberOfRows - 1; row >= 0; row--) {
-                if (playingField[pColumn][row] == "") {
+                if (playingField[pColumn][row] == null) {
                     return row;
                 }
             }
@@ -81,15 +83,15 @@ public class PlayingFieldModel {
      * @param pColumn The column where the mark should be set.
      * @param pRow The row where the mark should be set.
      */
-    public void setMark(String playerId, int pColumn, int pRow) {
-        if (playingField[pColumn][pRow].equals("")) {
+    public void setMark(Player pPlayer, int pColumn, int pRow) {
+        if (playingField[pColumn][pRow] == null) {
 
             // Using a seperate marking character for each player.
-            playingField[pColumn][pRow] = playerId;
+            playingField[pColumn][pRow] = pPlayer;
 
             numberOfMarks++;
         } else {
-            System.err.println("Fehler bei Zeichensetzen: Feld schon markiert");
+            System.err.println("Error setting mark: Cell already marked!");
         }
 
     }
@@ -102,11 +104,15 @@ public class PlayingFieldModel {
     public String toString() {
         String returnString = "";
         for (int row = 0; row < numberOfRows; row++) {
-            returnString = returnString + "[";
+            returnString = returnString + System.getProperty("line.separator") + "[ ";
             for (int column = 0; column < numberOfColumns; column++) {
-                returnString = returnString + playingField[column][row] + ", ";
+                if (playingField[column][row] == null) {
+                    returnString = returnString + "-, ";
+                } else {
+                    returnString = returnString + playingField[column][row].getName() + ", ";
+                }
             }
-            returnString = returnString + "]" + System.getProperty("line.separator");
+            returnString = returnString + " ]";
         }
         return returnString;
     }
@@ -125,12 +131,12 @@ public class PlayingFieldModel {
         for (int row = 0; row < numberOfRows; row++) {
             for (int position = 0; position < (numberOfColumns - 3); position++) {
 
-                String mark1 = playingField[position][row];
-                String mark2 = playingField[position + 1][row];
-                String mark3 = playingField[position + 2][row];
-                String mark4 = playingField[position + 3][row];
+                Player mark2 = playingField[position + 1][row];
+                Player mark1 = playingField[position][row];
+                Player mark3 = playingField[position + 2][row];
+                Player mark4 = playingField[position + 3][row];
 
-                if (!mark1.equals("") && mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
+                if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
 
                     ended = true;
                     break;
@@ -146,12 +152,12 @@ public class PlayingFieldModel {
             for (int column = 0; column < numberOfColumns; column++) {
                 for (int position = 0; position < (numberOfRows - 3); position++) {
 
-                    String mark1 = playingField[column][position];
-                    String mark2 = playingField[column][position + 1];
-                    String mark3 = playingField[column][position + 2];
-                    String mark4 = playingField[column][position + 3];
+                    Player mark1 = playingField[column][position];
+                    Player mark2 = playingField[column][position + 1];
+                    Player mark3 = playingField[column][position + 2];
+                    Player mark4 = playingField[column][position + 3];
 
-                    if (!mark1.equals("") && mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
+                    if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
                         ended = true;
                         break;
                     }
@@ -167,12 +173,12 @@ public class PlayingFieldModel {
             for (int column = 0; column < numberOfColumns; column++) {
                 for (int row = 0; row < numberOfRows; row++) {
                     if (column + 3 < numberOfColumns && row + 3 < numberOfRows) {
-                        String mark1 = playingField[column][row];
-                        String mark2 = playingField[column + 1][row + 1];
-                        String mark3 = playingField[column + 2][row + 2];
-                        String mark4 = playingField[column + 3][row + 3];
+                        Player mark1 = playingField[column][row];
+                        Player mark2 = playingField[column + 1][row + 1];
+                        Player mark3 = playingField[column + 2][row + 2];
+                        Player mark4 = playingField[column + 3][row + 3];
 
-                        if (!mark1.equals("") && mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
+                        if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
                             ended = true;
                             break;
                         }
@@ -190,12 +196,12 @@ public class PlayingFieldModel {
             for (int column = numberOfColumns - 1; column >= 0; column--) {
                 for (int row = 0; row < numberOfRows; row++) {
                     if (column - 3 >= 0 && row + 3 < numberOfRows) {
-                        String mark1 = playingField[column][row];
-                        String mark2 = playingField[column - 1][row + 1];
-                        String mark3 = playingField[column - 2][row + 2];
-                        String mark4 = playingField[column - 3][row + 3];
+                        Player mark1 = playingField[column][row];
+                        Player mark2 = playingField[column - 1][row + 1];
+                        Player mark3 = playingField[column - 2][row + 2];
+                        Player mark4 = playingField[column - 3][row + 3];
 
-                        if (!mark1.equals("") && mark1.equals(mark2) && mark2.equals(mark3) && mark3.equals(mark4)) {
+                        if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
                             ended = true;
                             break;
                         }

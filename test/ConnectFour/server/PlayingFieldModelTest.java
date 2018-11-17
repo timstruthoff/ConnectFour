@@ -5,6 +5,7 @@
  */
 package ConnectFour.server;
 
+import ConnectFour.server.PlayerStore.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +18,8 @@ import static org.junit.Assert.*;
  * @author tmst
  */
 public class PlayingFieldModelTest {
+
+    private Player testPlayerOne = new Player("test", "192.168.2.3", 12345);
 
     public PlayingFieldModelTest() {
     }
@@ -45,10 +48,10 @@ public class PlayingFieldModelTest {
         System.out.println("cleanPlayingField");
         PlayingFieldModel instance = new PlayingFieldModel(2, 2);
 
-        instance.setMark("test", 0, 0);
+        instance.setMark(testPlayerOne, 0, 0);
         instance.cleanPlayingField();
-        String expResult = "[, , ] [, , ] ";
-        String result = instance.toString().replaceAll(System.lineSeparator(), " ");
+        String expResult = "[ -, -,  ][ -, -,  ]";
+        String result = instance.toString().replaceAll(System.lineSeparator(), "");
         assertEquals(expResult, result);
     }
 
@@ -83,7 +86,7 @@ public class PlayingFieldModelTest {
         int result = instance.getFreeRowInColumn(pColumn);
         assertEquals(expResult, result);
 
-        instance.setMark("test", pColumn, result);
+        instance.setMark(testPlayerOne, pColumn, result);
         int expResult2 = 3;
         int result2 = instance.getFreeRowInColumn(pColumn);
         assertEquals(expResult2, result2);
@@ -96,10 +99,10 @@ public class PlayingFieldModelTest {
     public void testIsFieldFull() {
         System.out.println("isFieldFull");
         PlayingFieldModel instance = new PlayingFieldModel(2, 2);
-        instance.setMark("test", 0, 0);
-        instance.setMark("test", 1, 0);
-        instance.setMark("test", 0, 1);
-        instance.setMark("test", 1, 1);
+        instance.setMark(testPlayerOne, 0, 0);
+        instance.setMark(testPlayerOne, 1, 0);
+        instance.setMark(testPlayerOne, 0, 1);
+        instance.setMark(testPlayerOne, 1, 1);
         boolean expResult = true;
         boolean result = instance.isFieldFull();
         assertEquals(expResult, result);
@@ -113,9 +116,9 @@ public class PlayingFieldModelTest {
         System.out.println("setMark");
         PlayingFieldModel instance = new PlayingFieldModel(2, 2);
 
-        instance.setMark("test", 0, 0);
-        String expResult = "[test, , ] [, , ] ";
-        String result = instance.toString().replaceAll(System.lineSeparator(), " ");
+        instance.setMark(testPlayerOne, 0, 0);
+        String expResult = "[ test, -,  ][ -, -,  ]";
+        String result = instance.toString().replaceAll(System.lineSeparator(), "");
         assertEquals(expResult, result);
     }
 
@@ -127,9 +130,9 @@ public class PlayingFieldModelTest {
         System.out.println("toString");
         PlayingFieldModel instance = new PlayingFieldModel(2, 2);
 
-        instance.setMark("test", 0, 0);
-        String expResult = "[test, , ] [, , ] ";
-        String result = instance.toString().replaceAll(System.lineSeparator(), " ");
+        instance.setMark(testPlayerOne, 0, 0);
+        String expResult = "[ test, -,  ][ -, -,  ]";
+        String result = instance.toString().replaceAll(System.lineSeparator(), "");
         assertEquals(expResult, result);
     }
 
@@ -141,43 +144,43 @@ public class PlayingFieldModelTest {
         System.out.println("hasGameEnded");
         PlayingFieldModel instance = new PlayingFieldModel(4, 4);
 
-        instance.setMark("test", 0, 0);
+        instance.setMark(testPlayerOne, 0, 0);
         boolean expResult = false;
         boolean result = instance.hasGameEnded();
         assertEquals(expResult, result);
 
         instance.cleanPlayingField();
-        instance.setMark("test", 0, 0);
-        instance.setMark("test", 0, 1);
-        instance.setMark("test", 0, 2);
-        instance.setMark("test", 0, 3);
+        instance.setMark(testPlayerOne, 0, 0);
+        instance.setMark(testPlayerOne, 0, 1);
+        instance.setMark(testPlayerOne, 0, 2);
+        instance.setMark(testPlayerOne, 0, 3);
         boolean expResult2 = true;
         boolean result2 = instance.hasGameEnded();
         assertEquals(expResult2, result2);
 
         instance.cleanPlayingField();
-        instance.setMark("test", 0, 0);
-        instance.setMark("test", 1, 0);
-        instance.setMark("test", 2, 0);
-        instance.setMark("test", 3, 0);
+        instance.setMark(testPlayerOne, 0, 0);
+        instance.setMark(testPlayerOne, 1, 0);
+        instance.setMark(testPlayerOne, 2, 0);
+        instance.setMark(testPlayerOne, 3, 0);
         boolean expResult3 = true;
         boolean result3 = instance.hasGameEnded();
         assertEquals(expResult3, result3);
 
         instance.cleanPlayingField();
-        instance.setMark("test", 0, 0);
-        instance.setMark("test", 1, 1);
-        instance.setMark("test", 2, 2);
-        instance.setMark("test", 3, 3);
+        instance.setMark(testPlayerOne, 0, 0);
+        instance.setMark(testPlayerOne, 1, 1);
+        instance.setMark(testPlayerOne, 2, 2);
+        instance.setMark(testPlayerOne, 3, 3);
         boolean expResult4 = true;
         boolean result4 = instance.hasGameEnded();
         assertEquals(expResult4, result4);
 
         instance.cleanPlayingField();
-        instance.setMark("test", 3, 0);
-        instance.setMark("test", 2, 1);
-        instance.setMark("test", 1, 2);
-        instance.setMark("test", 0, 3);
+        instance.setMark(testPlayerOne, 3, 0);
+        instance.setMark(testPlayerOne, 2, 1);
+        instance.setMark(testPlayerOne, 1, 2);
+        instance.setMark(testPlayerOne, 0, 3);
         boolean expResult5 = true;
         boolean result5 = instance.hasGameEnded();
         assertEquals(expResult5, result5);
