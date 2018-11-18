@@ -118,12 +118,11 @@ public class PlayingFieldModel {
     }
 
     /**
-     * Checks if the game has ended and then returns the winner
+     * Check if the game has ended and there is a winner.
      *
-     * @return Boolean indicating whether the game has ended.
+     * @return The player who won the game or null if the game is still running.
      */
-    public boolean hasGameEnded() {
-        boolean ended = false;
+    public Player getWinner() {
 
         System.out.println("Checking horizontally.");
 
@@ -136,81 +135,78 @@ public class PlayingFieldModel {
                 Player mark3 = playingField[position + 2][row];
                 Player mark4 = playingField[position + 3][row];
 
+                // Check whether all marks are equal.
                 if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
 
-                    ended = true;
-                    break;
+                    // Return the player whose streak was found.
+                    return mark1;
                 }
             }
         }
 
-        if (ended == false) {
+        System.out.println("Checking vertically.");
 
-            System.out.println("Checking vertically.");
+        // Check for streaks of four in vertical direction.
+        for (int column = 0; column < numberOfColumns; column++) {
+            for (int position = 0; position < (numberOfRows - 3); position++) {
 
-            // Check for streaks of four in vertical direction.
-            for (int column = 0; column < numberOfColumns; column++) {
-                for (int position = 0; position < (numberOfRows - 3); position++) {
+                Player mark1 = playingField[column][position];
+                Player mark2 = playingField[column][position + 1];
+                Player mark3 = playingField[column][position + 2];
+                Player mark4 = playingField[column][position + 3];
 
-                    Player mark1 = playingField[column][position];
-                    Player mark2 = playingField[column][position + 1];
-                    Player mark3 = playingField[column][position + 2];
-                    Player mark4 = playingField[column][position + 3];
+                // Check whether all marks are equal.
+                if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
 
+                    // Return the player whose streak was found.
+                    return mark1;
+                }
+            }
+        }
+
+        System.out.println("Checking in diagonal direction from top left to bottom right.");
+
+        // Check for streaks of four in diagonal direction from top left to bottom right.
+        for (int column = 0; column < numberOfColumns; column++) {
+            for (int row = 0; row < numberOfRows; row++) {
+                if (column + 3 < numberOfColumns && row + 3 < numberOfRows) {
+                    Player mark1 = playingField[column][row];
+                    Player mark2 = playingField[column + 1][row + 1];
+                    Player mark3 = playingField[column + 2][row + 2];
+                    Player mark4 = playingField[column + 3][row + 3];
+
+                    // Check whether all marks are equal.
                     if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
-                        ended = true;
-                        break;
+
+                        // Return the player whose streak was found.
+                        return mark1;
                     }
                 }
             }
         }
 
-        if (ended == false) {
+        System.out.println("Checking in diagonal direction from top right to bottom left.");
 
-            System.out.println("Checking in diagonal direction from top left to bottom right.");
+        // Check for streaks of four in diagonal direction from bottom right to top left.
+        for (int column = numberOfColumns - 1; column >= 0; column--) {
+            for (int row = 0; row < numberOfRows; row++) {
+                if (column - 3 >= 0 && row + 3 < numberOfRows) {
+                    Player mark1 = playingField[column][row];
+                    Player mark2 = playingField[column - 1][row + 1];
+                    Player mark3 = playingField[column - 2][row + 2];
+                    Player mark4 = playingField[column - 3][row + 3];
 
-            // Check for streaks of four in diagonal direction from top left to bottom right.
-            for (int column = 0; column < numberOfColumns; column++) {
-                for (int row = 0; row < numberOfRows; row++) {
-                    if (column + 3 < numberOfColumns && row + 3 < numberOfRows) {
-                        Player mark1 = playingField[column][row];
-                        Player mark2 = playingField[column + 1][row + 1];
-                        Player mark3 = playingField[column + 2][row + 2];
-                        Player mark4 = playingField[column + 3][row + 3];
+                    // Check whether all marks are equal.
+                    if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
 
-                        if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
-                            ended = true;
-                            break;
-                        }
+                        // Return the player whose streak was found.
+                        return mark1;
                     }
                 }
             }
-
         }
 
-        if (ended == false) {
-
-            System.out.println("Checking in diagonal direction from top right to bottom left.");
-
-            // Check for streaks of four in diagonal direction from bottom right to top left.
-            for (int column = numberOfColumns - 1; column >= 0; column--) {
-                for (int row = 0; row < numberOfRows; row++) {
-                    if (column - 3 >= 0 && row + 3 < numberOfRows) {
-                        Player mark1 = playingField[column][row];
-                        Player mark2 = playingField[column - 1][row + 1];
-                        Player mark3 = playingField[column - 2][row + 2];
-                        Player mark4 = playingField[column - 3][row + 3];
-
-                        if (mark1 != null && mark1 == mark2 && mark2 == mark3 && mark3 == mark4) {
-                            ended = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-        }
-
-        return ended;
+        // No streak was found, meaning that the game is still running and there is no winner.
+        return null;
     }
 }

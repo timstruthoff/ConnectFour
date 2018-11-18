@@ -137,7 +137,7 @@ public class PlayingFieldModelTest {
     }
 
     /**
-     * Test of hasGameEnded method, of class PlayingFieldModel.
+     * Test of getWinner method, of class PlayingFieldModel.
      */
     @Test
     public void testHasGameEnded() {
@@ -145,8 +145,8 @@ public class PlayingFieldModelTest {
         PlayingFieldModel instance = new PlayingFieldModel(4, 4);
 
         instance.setMark(testPlayerOne, 0, 0);
-        boolean expResult = false;
-        boolean result = instance.hasGameEnded();
+        Player expResult = null;
+        Player result = instance.getWinner();
         assertEquals(expResult, result);
 
         instance.cleanPlayingField();
@@ -154,8 +154,8 @@ public class PlayingFieldModelTest {
         instance.setMark(testPlayerOne, 0, 1);
         instance.setMark(testPlayerOne, 0, 2);
         instance.setMark(testPlayerOne, 0, 3);
-        boolean expResult2 = true;
-        boolean result2 = instance.hasGameEnded();
+        Player expResult2 = testPlayerOne;
+        Player result2 = instance.getWinner();
         assertEquals(expResult2, result2);
 
         instance.cleanPlayingField();
@@ -163,8 +163,8 @@ public class PlayingFieldModelTest {
         instance.setMark(testPlayerOne, 1, 0);
         instance.setMark(testPlayerOne, 2, 0);
         instance.setMark(testPlayerOne, 3, 0);
-        boolean expResult3 = true;
-        boolean result3 = instance.hasGameEnded();
+        Player expResult3 = testPlayerOne;
+        Player result3 = instance.getWinner();
         assertEquals(expResult3, result3);
 
         instance.cleanPlayingField();
@@ -172,8 +172,8 @@ public class PlayingFieldModelTest {
         instance.setMark(testPlayerOne, 1, 1);
         instance.setMark(testPlayerOne, 2, 2);
         instance.setMark(testPlayerOne, 3, 3);
-        boolean expResult4 = true;
-        boolean result4 = instance.hasGameEnded();
+        Player expResult4 = testPlayerOne;
+        Player result4 = instance.getWinner();
         assertEquals(expResult4, result4);
 
         instance.cleanPlayingField();
@@ -181,8 +181,8 @@ public class PlayingFieldModelTest {
         instance.setMark(testPlayerOne, 2, 1);
         instance.setMark(testPlayerOne, 1, 2);
         instance.setMark(testPlayerOne, 0, 3);
-        boolean expResult5 = true;
-        boolean result5 = instance.hasGameEnded();
+        Player expResult5 = testPlayerOne;
+        Player result5 = instance.getWinner();
         assertEquals(expResult5, result5);
     }
 
