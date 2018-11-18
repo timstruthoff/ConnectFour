@@ -3,6 +3,8 @@ package ConnectFour.server;
 import ConnectFour.server.PlayerStore.Player;
 import EgJavaLib2.netzwerk.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Write a description of class GameServer here.
@@ -79,7 +81,13 @@ public class GameServer extends Server {
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
 
-        this.send(pClientIP, pClientPort, "OK Game start");
+        if (this.servergamelogic.isGameReady()) {
+
+            this.send(pClientIP, pClientPort, "START");
+        } else {
+            this.send(pClientIP, pClientPort, "OK Waiting for players");
+
+        }
 
     }
 
@@ -140,6 +148,7 @@ public class GameServer extends Server {
         String ableToDrop = this.servergamelogic.ableToDrop(pClientIP, pClientPort, column);
 
         if (ableToDrop.equals("SUCCESS")) {
+
             int row = servergamelogic.drop(pClientIP, pClientPort, column);
 
             System.out.println("DROP Player: " + p.getName() + " Column: " + pColumn + " Row: " + row);
@@ -159,6 +168,14 @@ public class GameServer extends Server {
 
         // Notify the player that the game has ended and whether they won or not.
         this.sendToAll("END " + pWinner.getName());
+    }
+
+    /**
+     * Notify all players, that the game can now start. Called when there are
+     * enough players or when the game just ended and can start again now.
+     */
+    public void sendGameStart() {
+        this.sendToAll("START");
     }
 
     /**

@@ -17,9 +17,13 @@ public class ServerGameLogic {
 
     private GameServer gameServer;
     private PlayerStore playerStore = new PlayerStore();
+    private int minimumNumberOfPlayers = 2;
+
     private int currentPlayerNumber = 0;
     private Player currentPlayer;
     private PlayingFieldModel playingFieldModel = new PlayingFieldModel(7, 7);
+
+    private boolean gameActive = false;
 
     public ServerGameLogic(GameServer pGameServer) {
         gameServer = pGameServer;
@@ -36,6 +40,11 @@ public class ServerGameLogic {
      */
     public Player addPlayer(String pName, String pIpAddress, int pPort) {
         Player p = playerStore.addPlayer(pName, pIpAddress, pPort);
+
+        // Start the game if there are enough players.
+        if (playerStore.getNumberOfPlayers() == minimumNumberOfPlayers && !this.gameActive) {
+            this.startGame();
+        }
         return p;
     }
 
@@ -51,6 +60,10 @@ public class ServerGameLogic {
      */
     public String ableToDrop(String pPlayerIpAddress, int pPlayerPort, int pColumn) {
         Player p = playerStore.getPlayerBySocket(pPlayerIpAddress, pPlayerPort);
+        if (!gameActive) {
+            return "Game is not active at the moment!";
+        }
+
         if (p == null) {
             return "Player not found! Socket: " + pPlayerIpAddress + ":" + pPlayerPort;
         }
@@ -100,9 +113,10 @@ public class ServerGameLogic {
         Player winner = this.playingFieldModel.getWinner();
 
         if (winner != null) {
-            // The game has ended and there is a winner.
 
+            // The game has ended and there is a winner.
             this.gameServer.sendGameEnded(winner);
+            this.gameActive = false;
         } else {
 
             // Turn to the next player.
@@ -139,6 +153,24 @@ public class ServerGameLogic {
         // Notify players whose turn it is now.
         currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
         this.gameServer.sendTurn(currentPlayer.getName());
+    }
+
+    public void resetGame() {
+        this.currentPlayerNumber = 0;
+        currentPlayer = playerStore.getPlayerByNumber(this.currentPlayerNumber);
+
+        this.playingFieldModel.cleanPlayingField();
+
+        this.gameActive = true;
+    }
+
+    public boolean isGameReady() {
+        return this.gameActive;
+    }
+
+    public void startGame() {
+        this.resetGame();
+        this.gameServer.sendGameStart();
     }
 
 }

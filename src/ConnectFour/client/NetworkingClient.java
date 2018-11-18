@@ -3,6 +3,8 @@ package ConnectFour.client;
 import EgJavaLib2.netzwerk.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +55,9 @@ public class NetworkingClient extends Client {
         switch (command) {
             case "OK":
                 break;
+            case "START":
+                this.onStart();
+                break;
             case "NEWENEMY":
                 this.onNewPlayer(parameters.get(0));
                 break;
@@ -69,6 +74,10 @@ public class NetworkingClient extends Client {
 
     public void onNewPlayer(String pName) {
         gameLogic.addPlayer(pName);
+    }
+
+    public void onStart() {
+        gameLogic.onStart();
     }
 
     public void onDropped(List<String> p) {
@@ -94,7 +103,11 @@ public class NetworkingClient extends Client {
     }
 
     public void onEnd(String pWinner) {
-        this.gameLogic.onGameEnd(pWinner);
+        try {
+            this.gameLogic.onGameEnd(pWinner);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(NetworkingClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setWindow(GameWindow pWindow) {

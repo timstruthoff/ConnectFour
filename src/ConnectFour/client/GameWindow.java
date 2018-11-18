@@ -14,12 +14,18 @@ public class GameWindow extends SasApp {
 
     private List<Text> playerNameTexts = new ArrayList<Text>();
     private int playerTextVerticalSpacing = 50;
-    private int playerTextYStart = 150;
     private int playerTextXStart = 500;
+    private int playerTextYStart = 150;
 
     private Text resultGraphic = new Text(500, 250, "Game not active");
     private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
-    private Arrow[] arrowGraphics = new Arrow[7];
+
+    private int arrowXStart = 50;
+    private int arrowYStart = 85;
+    private int arrowXSpacing = 50;
+    private String arrowActiveColor = "black";
+    private String arrowInactiveColor = "white";
+    private Arrow[] arrowGraphics = new Arrow[numberOfColumns];
 
     private ConnectFourGame gameLogic;
 
@@ -39,14 +45,24 @@ public class GameWindow extends SasApp {
     }
 
     public void drawArrows() {
-        int xStart = 50;
-        int yStart = 85;
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < numberOfColumns; i++) {
             arrowGraphics[i] = new Arrow();
-            arrowGraphics[i].moveTo(xStart, yStart);
+            arrowGraphics[i].setColor(this.arrowInactiveColor);
+            arrowGraphics[i].moveTo(this.arrowXStart + i * this.arrowXSpacing, this.arrowYStart);
             arrowGraphics[i].setColumn(i);
-            xStart = xStart + 50;
+        }
+    }
+
+    /**
+     * Set the color of all arrows
+     *
+     * @param pColor The color name as a string. Must be one of the permitted
+     * color names in EGJavaLib2.
+     */
+    public void setArrowColor(String pColor) {
+        for (Arrow arrow : arrowGraphics) {
+            arrow.setColor(pColor);
         }
     }
 
@@ -54,8 +70,8 @@ public class GameWindow extends SasApp {
         int xStart = 50;
         int yStart = 150;
 
-        for (int row = 0; row < 7; row++) {
-            for (int column = 0; column < 7; column++) {
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int column = 0; column < numberOfColumns; column++) {
                 Cell f = new Cell(xStart, yStart);
                 f.setPosition(column, row);
                 playingField[column][row] = f;
@@ -88,15 +104,17 @@ public class GameWindow extends SasApp {
 
     public void mouseMoved() {
 
-        /*for (int i = 0; i < 7; i++) {
-            if (arrowGraphics[6] != null) {
-                if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
-                    arrowGraphics[i].setColor(playerOneColor);
-                } else {
-                    arrowGraphics[i].setColor("black");
+        for (int i = 0; i < numberOfColumns; i++) {
+            if (arrowGraphics[i] != null) {
+                if (this.gameLogic != null && this.gameLogic.getGameActive()) {
+                    if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
+                        arrowGraphics[i].setColor(this.gameLogic.getPlayerColor(this.gameLogic.getMyName()));
+                    } else {
+                        arrowGraphics[i].setColor(arrowActiveColor);
+                    }
                 }
             }
-        }*/
+        }
     }
 
     /**
@@ -112,12 +130,33 @@ public class GameWindow extends SasApp {
         playingField[pColumn][pRow].setColor(pColor);
     }
 
+    /**
+     * Empty all playing filled cells.
+     */
+    public void resetPlayingField() {
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int column = 0; column < numberOfColumns; column++) {
+                playingField[column][row].setColor("white");
+            }
+        }
+
+    }
+
     public int getNumberOfColumns() {
         return numberOfColumns;
     }
 
     public int getNumberOfRows() {
         return numberOfRows;
+    }
+
+    public void activateGame() {
+        this.resultGraphic.setText("");
+        this.setArrowColor(arrowActiveColor);
+    }
+
+    public void deactivateGame() {
+        this.setArrowColor(arrowInactiveColor);
     }
 
 }

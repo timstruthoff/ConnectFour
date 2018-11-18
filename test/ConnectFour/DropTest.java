@@ -59,6 +59,22 @@ public class DropTest {
         this.startClientTwo();
         TimeUnit.MILLISECONDS.sleep(1000);
         this.dropOne();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropOne();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropTwo();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropOne();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropTwo();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropOne();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropTwo();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropOne();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        this.dropTwo();
         TimeUnit.MILLISECONDS.sleep(10000);
     }
 
@@ -92,12 +108,11 @@ public class DropTest {
         clientTwo.setWindow(windowTwo);
     }
 
-    public void drop() {
+    public void dropOne() {
+        gameLogicOne.drop(1);
+    }
+
+    public void dropTwo() {
         gameLogicTwo.drop(2);
     }
-
-    public void dropOne() {
-        gameLogicOne.drop(2);
-    }
-
 }

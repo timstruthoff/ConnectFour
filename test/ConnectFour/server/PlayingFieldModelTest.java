@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 public class PlayingFieldModelTest {
 
     private Player testPlayerOne = new Player("test", "192.168.2.3", 12345);
+    private Player testPlayerTwo = new Player("testTwo", "192.168.2.4", 12345);
 
     public PlayingFieldModelTest() {
     }
@@ -149,6 +150,7 @@ public class PlayingFieldModelTest {
         Player result = instance.getWinner();
         assertEquals(expResult, result);
 
+        // Positive test in all directions
         instance.cleanPlayingField();
         instance.setMark(testPlayerOne, 0, 0);
         instance.setMark(testPlayerOne, 0, 1);
@@ -184,6 +186,16 @@ public class PlayingFieldModelTest {
         Player expResult5 = testPlayerOne;
         Player result5 = instance.getWinner();
         assertEquals(expResult5, result5);
+
+        // Negative test in all directions
+        instance.cleanPlayingField();
+        instance.setMark(testPlayerOne, 0, 0);
+        instance.setMark(testPlayerTwo, 0, 1);
+        instance.setMark(testPlayerOne, 0, 2);
+        instance.setMark(testPlayerOne, 0, 3);
+        Player expResult6 = null;
+        Player result6 = instance.getWinner();
+        assertEquals(expResult6, result6);
     }
 
 }

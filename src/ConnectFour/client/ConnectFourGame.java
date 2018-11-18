@@ -14,6 +14,8 @@ public class ConnectFourGame {
     private NetworkingClient client;
     private GameWindow window;
 
+    private boolean gameActive = false;
+
     private List<String> playerNames = new ArrayList<String>();
     private String[] playerColors = {"blue", "red", "green"};
     private String myName;
@@ -22,8 +24,9 @@ public class ConnectFourGame {
         client = pClient;
         window = pWindow;
 
-        this.startGame();
-
+        // Ask for player name and then send it to the server.
+        myName = window.askForPlayerName();
+        client.sendPlayerName(myName);
     }
 
     public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow, String pPlayerName) {
@@ -34,11 +37,23 @@ public class ConnectFourGame {
 
     }
 
-    public void startGame() {
+    /**
+     * Gets the color of a player.
+     *
+     * @param pPlayerName A player name.
+     * @return The player's color.
+     */
+    public String getPlayerColor(String pPlayerName) {
+        int playerIndex = playerNames.indexOf(pPlayerName);
 
-        // Ask for player name and then send it to the server.
-        myName = window.askForPlayerName();
-        client.sendPlayerName(myName);
+        if (playerIndex < playerColors.length) {
+            return playerColors[playerIndex];
+        }
+        return null;
+    }
+
+    public String getMyName() {
+        return myName;
     }
 
     public void addPlayer(String pName) {
@@ -62,7 +77,7 @@ public class ConnectFourGame {
         }
 
         // Getting the corresponding color.
-        String color = playerColors[playerNumber];
+        String color = this.getPlayerColor(pPlayerName);
 
         this.window.setFieldCellColor(pColumn, pRow, color);
     }
@@ -97,11 +112,48 @@ public class ConnectFourGame {
         window = pWindow;
     }
 
+    /**
+     * Called by the networking class when it receives a message from the
+     * server, that the game has ended.
+     *
+     * @param pWinner The name of the winner of the current match.
+     */
     public void onGameEnd(String pWinner) {
         if (pWinner.equals(myName)) {
             this.window.setResultGraphicText("You won!");
         } else {
             this.window.setResultGraphicText("You lost! Player " + pWinner + " won.");
+        }
+        this.setGameActive(false);
+    }
+
+    /**
+     * Called by the networking class when the server sends a message to start
+     * the game.
+     */
+    public void resetGame() {
+        this.window.resetPlayingField();
+    }
+
+    /**
+     * Called by the networking class when the server sends a message to start
+     * the game.
+     */
+    public void onStart() {
+        this.resetGame();
+        this.setGameActive(true);
+    }
+
+    public boolean getGameActive() {
+        return gameActive;
+    }
+
+    public void setGameActive(boolean pGameActive) {
+        gameActive = pGameActive;
+        if (gameActive) {
+            this.window.activateGame();
+        } else {
+            this.window.deactivateGame();
         }
     }
 
