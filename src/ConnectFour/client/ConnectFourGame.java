@@ -97,4 +97,12 @@ public class ConnectFourGame {
         window = pWindow;
     }
 
+    public void onGameEnd(String pWinner) {
+        if (pWinner.equals(myName)) {
+            this.window.setResultGraphicText("You won!");
+        } else {
+            this.window.setResultGraphicText("You lost! Player " + pWinner + " won.");
+        }
+    }
+
 }

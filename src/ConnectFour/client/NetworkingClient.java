@@ -59,6 +59,9 @@ public class NetworkingClient extends Client {
             case "DROPPED":
                 this.onDropped(parameters);
                 break;
+            case "END":
+                this.onEnd(parameters.get(0));
+                break;
             default:
                 break;
         }
@@ -88,6 +91,10 @@ public class NetworkingClient extends Client {
 
         System.out.println(Arrays.toString(p.toArray()));
         System.out.println("Name: " + playerName + " column: " + column + " row: " + row);
+    }
+
+    public void onEnd(String pWinner) {
+        this.gameLogic.onGameEnd(pWinner);
     }
 
     public void setWindow(GameWindow pWindow) {
