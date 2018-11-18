@@ -41,10 +41,6 @@ public class ServerGameLogic {
     public Player addPlayer(String pName, String pIpAddress, int pPort) {
         Player p = playerStore.addPlayer(pName, pIpAddress, pPort);
 
-        // Start the game if there are enough players.
-        if (playerStore.getNumberOfPlayers() == minimumNumberOfPlayers && !this.gameActive) {
-            this.startGame();
-        }
         return p;
     }
 
@@ -126,6 +122,38 @@ public class ServerGameLogic {
         return row;
     }
 
+    public void onNewPlayer(String pClientIp, int pClientPort, String pName) {
+
+        List<Player> allPlayers = this.getPlayerStore().getAllPlayers();
+
+        System.out.println("Searching for other players:");
+
+        // Sending a message to all other players indicating that a new player has joined.
+        for (Player currentPlayer : allPlayers) {
+            String currentIp = currentPlayer.getIpAddress();
+            int currentPort = currentPlayer.getPort();
+
+            // Notify newly joined player that this player was already in the game.
+            this.gameServer.sendNewPlayer(pClientIp, pClientPort, currentPlayer.getName());
+
+            // If player is not the one that has just joined
+            if (currentIp.equals(pClientIp) && currentPort == pClientPort) {
+                System.out.println("Joined: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+            } else {
+                System.out.println("Other: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
+
+                // Notify player that a new enemy has joined.
+                this.gameServer.sendNewPlayer(currentIp, currentPort, pName);
+
+            }
+        }
+
+        // Start the game if there are enough players.
+        if (this.enoughPlayers() && !this.isGameActive()) {
+            this.startGame();
+        }
+    }
+
     public PlayerStore getPlayerStore() {
         return playerStore;
     }
@@ -164,13 +192,18 @@ public class ServerGameLogic {
         this.gameActive = true;
     }
 
-    public boolean isGameReady() {
+    public boolean enoughPlayers() {
+        return playerStore.getNumberOfPlayers() == minimumNumberOfPlayers;
+    }
+
+    public boolean isGameActive() {
         return this.gameActive;
     }
 
     public void startGame() {
         this.resetGame();
         this.gameServer.sendGameStart();
+        this.gameServer.sendTurn(currentPlayer.getName());
     }
 
 }

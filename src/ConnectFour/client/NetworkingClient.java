@@ -61,6 +61,9 @@ public class NetworkingClient extends Client {
             case "NEWENEMY":
                 this.onNewPlayer(parameters.get(0));
                 break;
+            case "TURN":
+                this.onTurn(parameters.get(0));
+                break;
             case "DROPPED":
                 this.onDropped(parameters);
                 break;
@@ -78,6 +81,10 @@ public class NetworkingClient extends Client {
 
     public void onStart() {
         gameLogic.onStart();
+    }
+
+    public void onTurn(String pPlayerName) {
+        gameLogic.changeTurn(pPlayerName);
     }
 
     public void onDropped(List<String> p) {
@@ -103,11 +110,7 @@ public class NetworkingClient extends Client {
     }
 
     public void onEnd(String pWinner) {
-        try {
-            this.gameLogic.onGameEnd(pWinner);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(NetworkingClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.gameLogic.onGameEnd(pWinner);
     }
 
     public void setWindow(GameWindow pWindow) {

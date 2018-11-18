@@ -62,6 +62,28 @@ public class ConnectFourGame {
     }
 
     /**
+     * Change whose turn it is.
+     *
+     * @param pPlayerName
+     */
+    public void changeTurn(String pPlayerName) {
+
+        // Check if the player is known to the client.
+        if (playerNames.indexOf(pPlayerName) < 0) {
+            throw new IllegalArgumentException("Player not found!");
+        }
+
+        // Check if it's my turn.
+        if (pPlayerName.equals(myName)) {
+            this.window.showControls();
+        } else {
+            this.window.hideControls();
+        }
+
+        this.window.setActivePlayer(pPlayerName);
+    }
+
+    /**
      * Sets a mark on a specific position on the playing field. This mark is
      * stored in the string array with a specific character for each player.
      *
@@ -125,6 +147,8 @@ public class ConnectFourGame {
             this.window.setResultGraphicText("You lost! Player " + pWinner + " won.");
         }
         this.setGameActive(false);
+        this.window.hideControls();
+        this.window.setActivePlayer(null);
     }
 
     /**
@@ -150,11 +174,6 @@ public class ConnectFourGame {
 
     public void setGameActive(boolean pGameActive) {
         gameActive = pGameActive;
-        if (gameActive) {
-            this.window.activateGame();
-        } else {
-            this.window.deactivateGame();
-        }
     }
 
 }

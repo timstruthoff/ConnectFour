@@ -81,7 +81,7 @@ public class GameServer extends Server {
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
 
-        if (this.servergamelogic.isGameReady()) {
+        if (this.servergamelogic.isGameActive()) {
 
             this.send(pClientIP, pClientPort, "START");
         } else {
@@ -105,29 +105,8 @@ public class GameServer extends Server {
         Player p = servergamelogic.addPlayer(pName, pClientIp, pClientPort);
         this.send(pClientIp, pClientPort, "OK ");
 
-        List<Player> allPlayers = servergamelogic.getPlayerStore().getAllPlayers();
-
-        System.out.println("Searching for other players:");
-
-        // Sending a message to all other players indicating that a new player has joined.
-        for (Player currentPlayer : allPlayers) {
-            String currentIp = currentPlayer.getIpAddress();
-            int currentPort = currentPlayer.getPort();
-
-            // Notify newly joined player that this player was already in the game.
-            this.send(pClientIp, pClientPort, "NEWENEMY " + currentPlayer.getName());
-
-            // If player is not the one that has just joined
-            if (currentIp.equals(pClientIp) && currentPort == pClientPort) {
-                System.out.println("Joined: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
-            } else {
-                System.out.println("Other: " + currentPlayer.getName() + " " + currentPlayer.getIpAddress() + ":" + currentPlayer.getPort());
-
-                // Notify player that a new enemy has joined.
-                this.send(currentIp, currentPort, "NEWENEMY " + p.getName());
-
-            }
-        }
+        // Notify the game logic that a new player has just joined.
+        this.servergamelogic.onNewPlayer(pClientIp, pClientPort, pName);
     }
 
     /**
@@ -158,6 +137,10 @@ public class GameServer extends Server {
         } else {
             this.send(pClientIP, pClientPort, "ERR " + ableToDrop);
         }
+    }
+
+    public void sendNewPlayer(String pRecipientIp, int pRecipientPort, String pNewPlayerName) {
+        this.send(pRecipientIp, pRecipientPort, "NEWENEMY " + pNewPlayerName);
     }
 
     /**

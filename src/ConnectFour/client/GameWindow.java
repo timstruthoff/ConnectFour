@@ -12,13 +12,7 @@ public class GameWindow extends SasApp {
 
     private Cell[][] playingField = new Cell[numberOfColumns][numberOfRows];
 
-    private List<Text> playerNameTexts = new ArrayList<Text>();
-    private int playerTextVerticalSpacing = 50;
-    private int playerTextXStart = 500;
-    private int playerTextYStart = 150;
-
     private Text resultGraphic = new Text(500, 250, "Game not active");
-    private Circle activePlayerIndicatorGraphic = new Circle(465, 155, 10, "green");
 
     private int arrowXStart = 50;
     private int arrowYStart = 85;
@@ -26,6 +20,10 @@ public class GameWindow extends SasApp {
     private String arrowActiveColor = "black";
     private String arrowInactiveColor = "white";
     private Arrow[] arrowGraphics = new Arrow[numberOfColumns];
+
+    private boolean showControls = false;
+
+    private PlayerNamesDisplay playerNamesDisplay = new PlayerNamesDisplay();
 
     private ConnectFourGame gameLogic;
 
@@ -82,10 +80,17 @@ public class GameWindow extends SasApp {
         }
     }
 
+    /**
+     * Add a player to the window.
+     *
+     * @param pName The name of the new player.
+     */
     public void addPlayer(String pName) {
-        int yCoordinate = playerTextYStart + playerNameTexts.size() * playerTextVerticalSpacing;
-        Text t = new Text(playerTextXStart, yCoordinate, pName);
-        playerNameTexts.add(t);
+        this.playerNamesDisplay.addPlayer(pName);
+    }
+
+    public void setActivePlayer(String pName) {
+        this.playerNamesDisplay.setActivePlayer(pName);
     }
 
     public void setResultGraphicText(String pText) {
@@ -106,7 +111,7 @@ public class GameWindow extends SasApp {
 
         for (int i = 0; i < numberOfColumns; i++) {
             if (arrowGraphics[i] != null) {
-                if (this.gameLogic != null && this.gameLogic.getGameActive()) {
+                if (showControls) {
                     if (arrowGraphics[i].contains(myMouse.getX(), myMouse.getY())) {
                         arrowGraphics[i].setColor(this.gameLogic.getPlayerColor(this.gameLogic.getMyName()));
                     } else {
@@ -150,12 +155,14 @@ public class GameWindow extends SasApp {
         return numberOfRows;
     }
 
-    public void activateGame() {
+    public void showControls() {
+        this.showControls = true;
         this.resultGraphic.setText("");
         this.setArrowColor(arrowActiveColor);
     }
 
-    public void deactivateGame() {
+    public void hideControls() {
+        this.showControls = false;
         this.setArrowColor(arrowInactiveColor);
     }
 
