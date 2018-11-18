@@ -155,11 +155,10 @@ public class GameServer extends Server {
      * Send a message notifying the players that the game has ended and whether
      * they have won or not.
      */
-    public void sendGameEnded() {
+    public void sendGameEnded(Player pWinner) {
 
         // Notify the player that the game has ended and whether they won or not.
-        Player winner = servergamelogic.getActivePlayer();
-        this.send(winner.getIpAddress(), winner.getPort(), "END true");
+        this.send(pWinner.getIpAddress(), pWinner.getPort(), "END true");
 
         List<Player> loosers = servergamelogic.getInactivePlayers();
         for (Player looser : loosers) {

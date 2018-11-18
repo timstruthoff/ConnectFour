@@ -96,8 +96,19 @@ public class ServerGameLogic {
         // Set the chip in the playing field.
         this.playingFieldModel.setMark(p, pColumn, row);
 
-        // Turn to the next player.
-        this.nextPlayer();
+        // Check for game outcome
+        Player winner = this.playingFieldModel.getWinner();
+
+        if (winner != null) {
+            // The game has ended and there is a winner.
+
+            this.gameServer.sendGameEnded(winner);
+        } else {
+
+            // Turn to the next player.
+            this.nextPlayer();
+        }
+
         return row;
     }
 
