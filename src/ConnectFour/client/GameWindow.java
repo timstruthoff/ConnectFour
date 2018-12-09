@@ -25,7 +25,7 @@ public class GameWindow extends SasApp {
 
     private PlayerNamesDisplay playerNamesDisplay = new PlayerNamesDisplay();
 
-    private ConnectFourGame gameLogic;
+    private ClientGameLogic gameLogic;
 
     public GameWindow() {
 
@@ -34,7 +34,7 @@ public class GameWindow extends SasApp {
         myView.setSize(1000, 600);
     }
 
-    public void setGameLogic(ConnectFourGame pGameLogic) {
+    public void setGameLogic(ClientGameLogic pGameLogic) {
         gameLogic = pGameLogic;
     }
 

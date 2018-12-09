@@ -24,11 +24,11 @@ public class DropTest {
 
     private NetworkingClient clientOne;
     private GameWindow windowOne;
-    private ConnectFourGame gameLogicOne;
+    private ClientGameLogic gameLogicOne;
 
     private NetworkingClient clientTwo;
     private GameWindow windowTwo;
-    private ConnectFourGame gameLogicTwo;
+    private ClientGameLogic gameLogicTwo;
 
     public DropTest() {
     }
@@ -82,7 +82,7 @@ public class DropTest {
         // Start new game window with selected server ip.
         clientOne = new NetworkingClient("127.0.0.1");
         windowOne = new GameWindow();
-        gameLogicOne = new ConnectFourGame(clientOne, windowOne, "testName1");
+        gameLogicOne = new ClientGameLogic(clientOne, windowOne, "testName1");
 
         gameLogicOne.setWindow(windowOne);
         gameLogicOne.setClient(clientOne);
@@ -97,7 +97,7 @@ public class DropTest {
         // Start new game window with selected server ip.
         clientTwo = new NetworkingClient("127.0.0.1");
         windowTwo = new GameWindow();
-        gameLogicTwo = new ConnectFourGame(clientTwo, windowTwo, "testName2");
+        gameLogicTwo = new ClientGameLogic(clientTwo, windowTwo, "testName2");
 
         gameLogicTwo.setWindow(windowTwo);
         gameLogicTwo.setClient(clientTwo);

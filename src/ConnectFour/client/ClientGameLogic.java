@@ -9,7 +9,7 @@ import java.util.List;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class ConnectFourGame {
+public class ClientGameLogic {
 
     private NetworkingClient client;
     private GameWindow window;
@@ -20,7 +20,7 @@ public class ConnectFourGame {
     private String[] playerColors = {"blue", "red", "green"};
     private String myName;
 
-    public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow) {
+    public ClientGameLogic(NetworkingClient pClient, GameWindow pWindow) {
         client = pClient;
         window = pWindow;
 
@@ -29,7 +29,7 @@ public class ConnectFourGame {
         client.sendPlayerName(myName);
     }
 
-    public ConnectFourGame(NetworkingClient pClient, GameWindow pWindow, String pPlayerName) {
+    public ClientGameLogic(NetworkingClient pClient, GameWindow pWindow, String pPlayerName) {
         client = pClient;
         window = pWindow;
         myName = pPlayerName;

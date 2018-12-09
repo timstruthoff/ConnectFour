@@ -15,9 +15,9 @@ import javax.swing.JOptionPane;
  */
 public class NetworkingClient extends Client {
 
-    private int id = (int) (Math.random() * 899 + 100);
+    private int id = (int) (Math.random() * 899 + 100); // Random number between 100 and 999
     private GameWindow window;
-    private ConnectFourGame gameLogic;
+    private ClientGameLogic gameLogic;
 
     String newline = System.getProperty("line.separator");
 
@@ -31,7 +31,7 @@ public class NetworkingClient extends Client {
         this.initialSetup();
     }
 
-    public void setGameLogic(ConnectFourGame pGameLogic) {
+    public void setGameLogic(ClientGameLogic pGameLogic) {
         gameLogic = pGameLogic;
     }
 

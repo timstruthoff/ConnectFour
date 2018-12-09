@@ -3,9 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/client/PlayerNamesDisplay.java</file>
             <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/client/GameWindow.java</file>
             <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/client/ConnectFourGame.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/server/PlayingFieldModel.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/server/ServerGameLogic.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/Start.java</file>
             <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/client/NetworkingClient.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/client/Arrow.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/server/GameServer.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/test/ConnectFour/DropTest.java</file>
+            <file>file:/Users/tmst/Documents/Schule/Info/4-Gewinnt/VierGewinnt/src/ConnectFour/server/PlayerStore/PlayerStore.java</file>
         </group>
     </open-files>
 </project-private>
