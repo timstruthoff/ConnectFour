@@ -102,8 +102,16 @@ public class GameServer extends Server {
 
         System.out.println("Login call: " + pName + pClientIp + pClientPort);
 
+        // Check if there is already a player with this name.
+        if (servergamelogic.getPlayerStore().getPlayerByName(pName) != null) {
+
+            // Send error to client.
+            this.send(pClientIp, pClientPort, "ERR Name already taken!");
+            return;
+        }
+
         Player p = servergamelogic.addPlayer(pName, pClientIp, pClientPort);
-        this.send(pClientIp, pClientPort, "OK ");
+        this.send(pClientIp, pClientPort, "OK");
 
         // Notify the game logic that a new player has just joined.
         this.servergamelogic.onNewPlayer(pClientIp, pClientPort, pName);
