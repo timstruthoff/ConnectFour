@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Write a description of class GameServer here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * A model of the connect four game. This class includes the main logic of the
+ * game.
  */
 public class ClientGameLogic {
 
-    private NetworkingClient client;
-    private GameWindow window;
+    private NetworkingClient networkingClient;
+    private GameWindow gameWindow;
 
     private boolean gameActive = false;
 
@@ -20,20 +18,26 @@ public class ClientGameLogic {
     private String[] playerColors = {"blue", "red", "green"};
     private String myName;
 
-    public ClientGameLogic(NetworkingClient pClient, GameWindow pWindow) {
-        client = pClient;
-        window = pWindow;
+    /**
+     * Create a game model.
+     *
+     * @param pNetworkingClient A NetworkingClient object.
+     * @param pGameWindow A GameWindow object.
+     */
+    public ClientGameLogic(NetworkingClient pNetworkingClient, GameWindow pGameWindow) {
+        networkingClient = pNetworkingClient;
+        gameWindow = pGameWindow;
 
         // Ask for player name and then send it to the server.
-        myName = window.askForPlayerName();
-        client.sendPlayerName(myName);
+        myName = gameWindow.askForPlayerName();
+        networkingClient.sendPlayerName(myName);
     }
 
     public ClientGameLogic(NetworkingClient pClient, GameWindow pWindow, String pPlayerName) {
-        client = pClient;
-        window = pWindow;
+        networkingClient = pClient;
+        gameWindow = pWindow;
         myName = pPlayerName;
-        client.sendPlayerName(myName);
+        networkingClient.sendPlayerName(myName);
 
     }
 
@@ -44,11 +48,11 @@ public class ClientGameLogic {
      * @param pErrorMessage The error with which the name was rejected
      */
     public void onInvalidPlayerName(String pErrorMessage) {
-        window.showErrorMessage(pErrorMessage);
+        gameWindow.showErrorMessage(pErrorMessage);
 
         // Ask for player name and then send it to the server.
-        myName = window.askForPlayerName();
-        client.sendPlayerName(myName);
+        myName = gameWindow.askForPlayerName();
+        networkingClient.sendPlayerName(myName);
     }
 
     /**
@@ -66,13 +70,23 @@ public class ClientGameLogic {
         return null;
     }
 
+    /**
+     * Get the name of the player.
+     *
+     * @return the name.s
+     */
     public String getMyName() {
         return myName;
     }
 
+    /**
+     * Add a player to the game.
+     *
+     * @param pName The name of the new player.
+     */
     public void addPlayer(String pName) {
         playerNames.add(pName);
-        window.addPlayer(pName);
+        gameWindow.addPlayer(pName);
     }
 
     /**
@@ -82,19 +96,19 @@ public class ClientGameLogic {
      */
     public void changeTurn(String pPlayerName) {
 
-        // Check if the player is known to the client.
+        // Check if the player is known to the networkingClient.
         if (playerNames.indexOf(pPlayerName) < 0) {
             throw new IllegalArgumentException("Player not found!");
         }
 
         // Check if it's my turn.
         if (pPlayerName.equals(myName)) {
-            this.window.showControls();
+            this.gameWindow.showControls();
         } else {
-            this.window.hideControls();
+            this.gameWindow.hideControls();
         }
 
-        this.window.setActivePlayer(pPlayerName);
+        this.gameWindow.setActivePlayer(pPlayerName);
     }
 
     /**
@@ -115,37 +129,36 @@ public class ClientGameLogic {
         // Getting the corresponding color.
         String color = this.getPlayerColor(pPlayerName);
 
-        this.window.setFieldCellColor(pColumn, pRow, color);
+        this.gameWindow.setFieldCellColor(pColumn, pRow, color);
     }
 
     /**
      * Drop a chip in a column. Calculates the position of the top spot and
      * places a chip there.
      *
-     * @param pColumn
-     * @param pColor
+     * @param pColumn The column in which the chip should be dropped.
      * @return The row position of the chip.
      */
     public void drop(int pColumn) {
-        client.sendDrop(pColumn);
+        networkingClient.sendDrop(pColumn);
     }
 
     /**
-     * Pass the network client to this class.
+     * Pass the network networkingClient to this class.
      *
-     * @param pClient The network game client.
+     * @param pClient The network game networkingClient.
      */
     public void setClient(NetworkingClient pClient) {
-        client = pClient;
+        networkingClient = pClient;
     }
 
     /**
-     * Pass the window to this class.
+     * Pass the gameWindow to this class.
      *
-     * @param pClient The window object.
+     * @param pClient The gameWindow object.
      */
     public void setWindow(GameWindow pWindow) {
-        window = pWindow;
+        gameWindow = pWindow;
     }
 
     /**
@@ -156,13 +169,13 @@ public class ClientGameLogic {
      */
     public void onGameEnd(String pWinner) {
         if (pWinner.equals(myName)) {
-            this.window.setResultGraphicText("You won!");
+            this.gameWindow.setResultGraphicText("You won!");
         } else {
-            this.window.setResultGraphicText("You lost! Player " + pWinner + " won.");
+            this.gameWindow.setResultGraphicText("You lost! Player " + pWinner + " won.");
         }
         this.setGameActive(false);
-        this.window.hideControls();
-        this.window.setActivePlayer(null);
+        this.gameWindow.hideControls();
+        this.gameWindow.setActivePlayer(null);
     }
 
     /**
@@ -170,7 +183,7 @@ public class ClientGameLogic {
      * the game.
      */
     public void resetGame() {
-        this.window.resetPlayingField();
+        this.gameWindow.resetPlayingField();
     }
 
     /**
@@ -182,10 +195,20 @@ public class ClientGameLogic {
         this.setGameActive(true);
     }
 
+    /**
+     * Get whether the game is currently in progress or not.
+     *
+     * @return The games state.
+     */
     public boolean getGameActive() {
         return gameActive;
     }
 
+    /**
+     * Set whether the game is currently in progress or not.
+     *
+     * @param pGameActive The games state.
+     */
     public void setGameActive(boolean pGameActive) {
         gameActive = pGameActive;
     }

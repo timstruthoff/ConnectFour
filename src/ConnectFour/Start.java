@@ -5,17 +5,14 @@ import ConnectFour.client.GameClient;
 import javax.swing.JOptionPane;
 
 /**
- * Write a description of class Start here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * Start the application
  */
 public class Start {
 
     public Start() {
-        
+
         System.out.println("Start: App started.");
-        
+
         // Prepare options which the user can select when starting the app.
         Object[] options = {"Start server and play as a client.", "Only play as a client", "Cancel"};
 
@@ -35,7 +32,7 @@ public class Start {
 
             // User selected "Only play as a client".
             case 1:
-                
+
                 // Start new game server and new client.
                 GameClient client2 = new GameClient();
                 break;

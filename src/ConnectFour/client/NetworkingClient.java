@@ -8,10 +8,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- * Write a description of class NetworkingClient here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * Create a networking client used to communicate with the game server.
  */
 public class NetworkingClient extends Client {
 
@@ -22,9 +19,9 @@ public class NetworkingClient extends Client {
     String newline = System.getProperty("line.separator");
 
     /**
-     * Constructor for objects of class SpielClient
+     * Create a networking client.
      *
-     * @param pServerIP
+     * @param pServerIP The IP address of a server.
      */
     public NetworkingClient(String pServerIP) {
         super(pServerIP, 1234);
@@ -35,11 +32,15 @@ public class NetworkingClient extends Client {
         gameLogic = pGameLogic;
     }
 
+    /**
+     * Notify the server that the game client is ready.s
+     */
     public void initialSetup() {
         this.send("START");
     }
 
     /**
+     * Handle all messages coming from the server.
      *
      * @param pMessage
      */
@@ -82,6 +83,11 @@ public class NetworkingClient extends Client {
 
     }
 
+    /**
+     * Hanlde new player messages from the server.
+     *
+     * @param pName The name of the new player.
+     */
     public void onNewPlayer(String pName) {
         gameLogic.addPlayer(pName);
     }
@@ -94,22 +100,35 @@ public class NetworkingClient extends Client {
         gameLogic.changeTurn(pPlayerName);
     }
 
+    /**
+     * Handle dropped messages from the server. These message should include
+     * three parameters: 1. The name of the player who dropped the chip 2. The
+     * column number in which the chip was dropped. 3. The row number in which
+     * the chip was dropped.
+     *
+     * @param p An array with the parameters as strings.
+     */
     public void onDropped(List<String> p) {
         if (p.size() != 3) {
             throw new IllegalArgumentException("Invalid number of arguments in dropped command from server.");
         }
 
+        // Parse the player name
         String playerName = p.get(0);
+
+        // Parse and validate the column number
         int column = Integer.parseInt(p.get(1));
         if (column < 0 && column >= window.getNumberOfColumns()) {
             throw new IllegalArgumentException("Invalid column number " + column + ".");
         }
 
+        // Parse and validate the row number
         int row = Integer.parseInt(p.get(2));
         if (row < 0 && row >= window.getNumberOfRows()) {
             throw new IllegalArgumentException("Invalid row number " + row + ".");
         }
 
+        // Set the mark at the specified location.
         this.gameLogic.setMark(playerName, column, row);
 
         System.out.println(Arrays.toString(p.toArray()));
@@ -137,10 +156,21 @@ public class NetworkingClient extends Client {
         window = pWindow;
     }
 
+    /**
+     * Send a message to the server indicating, that the user chose a new player
+     * name.
+     *
+     * @param pName The new name.
+     */
     public void sendPlayerName(String pName) {
         this.send("LOGIN " + pName);
     }
 
+    /**
+     * Send a request to the server for dropping a chip in the specified column.
+     *
+     * @param pColumn The column in which the chip should be dropped.
+     */
     public void sendDrop(int pColumn) {
         this.send("DROP " + pColumn);
     }

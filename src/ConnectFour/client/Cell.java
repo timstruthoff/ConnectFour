@@ -4,8 +4,6 @@ import EgJavaLib2.egSas.*;
 
 /**
  * The graphics of a cell in the playing field.
- *
- * @author tmst
  */
 public class Cell extends Sprite {
 
@@ -18,6 +16,12 @@ public class Cell extends Sprite {
 
     private int width;
 
+    /**
+     * Create a cell.
+     *
+     * @param pX The horizontal coordinate of the cell.
+     * @param pY The vertical coordinate of the cell.
+     */
     public Cell(int pX, int pY) {
         width = 50;
         column = -1;
@@ -28,8 +32,13 @@ public class Cell extends Sprite {
         this.add(borderRectangle, innerRectangle, circle);
     }
 
-    public void setColor(String pZeichen) {
-        circle.setHexColor(pZeichen);
+    /**
+     * Change the color of the cell.
+     *
+     * @param pColorName The name of the new color.
+     */
+    public void setColor(String pColorName) {
+        circle.setHexColor(pColorName);
     }
 
     /**
@@ -43,10 +52,20 @@ public class Cell extends Sprite {
         row = pRow;
     }
 
+    /**
+     * Get the row in which the cell is.
+     *
+     * @return The row number
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Get the column in which the cell is.
+     *
+     * @return column row number
+     */
     public int getColumn() {
         return column;
     }

@@ -8,11 +8,13 @@ package ConnectFour.client;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author tmst
+ * A client window of the connect four game.
  */
 public class GameClient {
 
+    /**
+     * Start a client window of the connect four game.
+     */
     public GameClient() {
 
         System.out.println("Client: Started.");

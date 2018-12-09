@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author tmst
+ * Store and access all players in the game.
  */
 public class PlayerStore {
 
@@ -23,7 +22,7 @@ public class PlayerStore {
     /**
      * Gets a player by the socket through which they connected.
      *
-     * @param pIpAddress The ip address of player.
+     * @param pIpAddress The IP address of player.
      * @param pPort The port of player.
      * @return A player object or null if not found.
      */

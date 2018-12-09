@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author tmst
+ * Store all player name text graphics. Also handles dynamic positioning.
  */
 public class PlayerNamesDisplay {
 
@@ -25,16 +24,24 @@ public class PlayerNamesDisplay {
     private int playerTextXStart = 500;
     private int playerTextYStart = 150;
 
-    private int activePlayerIndicatorXOffset = -35; // The amount the player indicator is moved to the right in respect to the player name texts.
+    private int activePlayerIndicatorXOffset = -35; // The amount by which the player indicator is moved to the right in respect to the player name text.
     private int activePlayerIndicatorSize = 10;
 
     private Circle activePlayerIndicator;
 
+    /**
+     * Create a display.
+     */
     public PlayerNamesDisplay() {
         activePlayerIndicator = new Circle(0, 0, activePlayerIndicatorSize, "green");
         this.resetIndicator();
     }
 
+    /**
+     * Add a new player name.
+     *
+     * @param pName The name of the new player.
+     */
     public void addPlayer(String pName) {
         playerNames.add(pName);
 
@@ -46,6 +53,9 @@ public class PlayerNamesDisplay {
         numberOfPlayers++;
     }
 
+    /**
+     * Reset the current player indicator to its original position.
+     */
     public void resetIndicator() {
 
         int x = playerTextXStart + activePlayerIndicatorXOffset;
@@ -64,18 +74,21 @@ public class PlayerNamesDisplay {
             activePlayerIndicator.setTransparency(0);
         } else {
 
-            activePlayerIndicator.setTransparency(1);
+            // Search for the player name text.
             int index = playerNames.indexOf(pPlayerName);
             if (index < 0) {
                 throw new IllegalArgumentException("Player " + pPlayerName + "not found!");
             }
 
             System.out.println("Index: " + index);
+
+            // Calculate the new position of the indicator.
             int indicatorYCoordinate = playerTextYStart + index * playerTextVerticalSpacing - activePlayerIndicatorSize / 2;
             int indicatorXCoordinate = playerTextXStart + activePlayerIndicatorXOffset;
             System.out.println("Coordianates: x: " + indicatorXCoordinate + " y: " + indicatorYCoordinate);
 
             activePlayerIndicator.moveTo(indicatorXCoordinate, indicatorYCoordinate);
+            activePlayerIndicator.setTransparency(1);
         }
     }
 }

@@ -85,7 +85,7 @@ public class ServerGameLogic {
     /**
      * Drop a chip in a column
      *
-     * @param pPlayerIpAddress The ip address of the player who wants to drop
+     * @param pPlayerIpAddress The IP address of the player who wants to drop
      * the chip.
      * @param pPlayerPort The port of the player who wants to drop the chip.
      * @param pColumn the column in which the chip should be dropped.
@@ -122,13 +122,20 @@ public class ServerGameLogic {
         return row;
     }
 
+    /**
+     * Handle a new player joining the game.
+     *
+     * @param pClientIp The IP address of the new player.
+     * @param pClientPort The port number of the new player.
+     * @param pName The name of the new player.
+     */
     public void onNewPlayer(String pClientIp, int pClientPort, String pName) {
 
         List<Player> allPlayers = this.getPlayerStore().getAllPlayers();
 
         System.out.println("Searching for other players:");
 
-        // Sending a message to all other players indicating that a new player has joined.
+        // Send a message to all other players indicating that a new player has joined.
         for (Player currentPlayer : allPlayers) {
             String currentIp = currentPlayer.getIpAddress();
             int currentPort = currentPlayer.getPort();
@@ -166,6 +173,9 @@ public class ServerGameLogic {
         return playerStore.getAllExcept(currentPlayer);
     }
 
+    /**
+     * Pass the turn to the next player in line.
+     */
     public void nextPlayer() {
 
         // Turn to next player.
@@ -192,6 +202,11 @@ public class ServerGameLogic {
         this.gameActive = true;
     }
 
+    /**
+     * Check whether there are enough players in the game to be able to play.
+     *
+     * @return Boolean indication whether there are enough players.
+     */
     public boolean enoughPlayers() {
         return playerStore.getNumberOfPlayers() == minimumNumberOfPlayers;
     }

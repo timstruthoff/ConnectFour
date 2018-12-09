@@ -7,19 +7,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Write a description of class GameServer here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * A server for handling all client communications.
  */
 public class GameServer extends Server {
 
-    ServerGameLogic servergamelogic = new ServerGameLogic(this);
+    ServerGameLogic serverGameLogic = new ServerGameLogic(this);
 
     String newline = System.getProperty("line.separator");
 
     /**
-     * Constructor for objects of class SpielServer
+     * Start a new server.
      */
     public GameServer() {
         super(1234);
@@ -76,12 +73,13 @@ public class GameServer extends Server {
     /**
      * Process start messages from the client.
      *
-     * @param pClientIP
-     * @param pClientPort
+     * @param pClientIP The client's IP address as a string (For example
+     * "127.0.0.1").
+     * @param pClientPort The client's port.
      */
     public void onStartMessage(String pClientIP, int pClientPort) {
 
-        if (this.servergamelogic.isGameActive()) {
+        if (this.serverGameLogic.isGameActive()) {
 
             this.send(pClientIP, pClientPort, "START");
         } else {
@@ -94,49 +92,55 @@ public class GameServer extends Server {
     /**
      * Process login messages from the client.
      *
-     * @param pClientIp
-     * @param pClientPort
-     * @param pName
+     * @param pClientIp The client's IP address as a string (For example
+     * "127.0.0.1").
+     * @param pClientPort The client's port.
+     * @param pName The name of the new player.
      */
     public void onLoginMessage(String pClientIp, int pClientPort, String pName) {
 
         System.out.println("Login call: " + pName + pClientIp + pClientPort);
 
         // Check if there is already a player with this name.
-        if (servergamelogic.getPlayerStore().getPlayerByName(pName) != null) {
+        if (serverGameLogic.getPlayerStore().getPlayerByName(pName) != null) {
 
             // Send error to client.
             this.send(pClientIp, pClientPort, "ERR Name already taken!");
             return;
         }
 
-        Player p = servergamelogic.addPlayer(pName, pClientIp, pClientPort);
+        Player p = serverGameLogic.addPlayer(pName, pClientIp, pClientPort);
         this.send(pClientIp, pClientPort, "OK");
 
         // Notify the game logic that a new player has just joined.
-        this.servergamelogic.onNewPlayer(pClientIp, pClientPort, pName);
+        this.serverGameLogic.onNewPlayer(pClientIp, pClientPort, pName);
     }
 
     /**
      * Drops a chip in the column.
      *
-     * @param pClientIP
-     * @param pClientPort
+     * @param pClientIP The client's IP address as a string (For example
+     * "127.0.0.1").
+     * @param pClientPort The client's port.
      * @param pColumn The column where the chip should be dropped.
      */
     public void onDropMessage(String pClientIP, int pClientPort, String pColumn) {
         int column = Integer.parseInt(pColumn);
 
-        Player p = servergamelogic.getPlayerStore().getPlayerBySocket(pClientIP, pClientPort);
+        // Search for the player object.
+        Player p = serverGameLogic.getPlayerStore().getPlayerBySocket(pClientIP, pClientPort);
 
+        // Check if the player exists
         if (p == null) {
             throw new IllegalArgumentException("Player not found!");
         }
-        String ableToDrop = this.servergamelogic.ableToDrop(pClientIP, pClientPort, column);
 
+        // Check whether the player is able to drop a chip in the specified column.
+        String ableToDrop = this.serverGameLogic.ableToDrop(pClientIP, pClientPort, column);
         if (ableToDrop.equals("SUCCESS")) {
 
-            int row = servergamelogic.drop(pClientIP, pClientPort, column);
+            // Put the chip in the column in the game model.
+            int row = serverGameLogic.drop(pClientIP, pClientPort, column);
 
             System.out.println("DROP Player: " + p.getName() + " Column: " + pColumn + " Row: " + row);
 
@@ -147,6 +151,14 @@ public class GameServer extends Server {
         }
     }
 
+    /**
+     * Notify a player that a new player has joined.
+     *
+     * @param pRecipientIp The recipient's IP address as a string (For example
+     * "127.0.0.1").
+     * @param pRecipientPort The recipient's port.
+     * @param pNewPlayerName The name of the newly joined player.
+     */
     public void sendNewPlayer(String pRecipientIp, int pRecipientPort, String pNewPlayerName) {
         this.send(pRecipientIp, pRecipientPort, "NEWENEMY " + pNewPlayerName);
     }

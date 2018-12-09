@@ -6,6 +6,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * The GUI of the game.
+ */
 public class GameWindow extends SasApp {
 
     private int numberOfColumns = 7;
@@ -39,6 +42,11 @@ public class GameWindow extends SasApp {
         gameLogic = pGameLogic;
     }
 
+    /**
+     * Display a dialog for choosing a name.
+     *
+     * @return The chosen name.
+     */
     public String askForPlayerName() {
         return (String) JOptionPane.showInputDialog(null, "What is your name?", "", JOptionPane.QUESTION_MESSAGE, null, null, "");
     }
@@ -53,6 +61,9 @@ public class GameWindow extends SasApp {
         JOptionPane.showMessageDialog(new JFrame(), pErrorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Create the arrow graphics on top of the playing field.
+     */
     public void drawArrows() {
 
         for (int i = 0; i < numberOfColumns; i++) {
@@ -75,6 +86,9 @@ public class GameWindow extends SasApp {
         }
     }
 
+    /**
+     * Create the playing field graphics.
+     */
     public void drawPlayingField() {
         int xStart = 50;
         int yStart = 150;
@@ -118,6 +132,10 @@ public class GameWindow extends SasApp {
         }
     }
 
+    /**
+     * Handle mouse moves by the user. Make the arrows respond to the user
+     * hovering over them.
+     */
     public void mouseMoved() {
 
         for (int i = 0; i < numberOfColumns; i++) {
@@ -166,12 +184,18 @@ public class GameWindow extends SasApp {
         return numberOfRows;
     }
 
+    /**
+     * Show the arrow controls.
+     */
     public void showControls() {
         this.showControls = true;
         this.resultGraphic.setText("");
         this.setArrowColor(arrowActiveColor);
     }
 
+    /**
+     * Hide the arrow controls.
+     */
     public void hideControls() {
         this.showControls = false;
         this.setArrowColor(arrowInactiveColor);

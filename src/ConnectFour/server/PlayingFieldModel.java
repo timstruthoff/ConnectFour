@@ -8,8 +8,8 @@ package ConnectFour.server;
 import ConnectFour.server.PlayerStore.Player;
 
 /**
- *
- * @author tmst
+ * A model of a connect four playing field. This class stores the state of the
+ * playing field and provides various methods to interact with it.
  */
 public class PlayingFieldModel {
 
@@ -18,6 +18,12 @@ public class PlayingFieldModel {
     private Player[][] playingField;
     private int numberOfMarks = 0;
 
+    /**
+     * Create a new playing field model.
+     *
+     * @param pNumberOfColumns The number of columns in the playing field.
+     * @param pNumberOfRows The number of rows in the playing field.
+     */
     public PlayingFieldModel(int pNumberOfColumns, int pNumberOfRows) {
         numberOfColumns = pNumberOfColumns;
         numberOfRows = pNumberOfRows;
@@ -53,12 +59,18 @@ public class PlayingFieldModel {
      * @return The row number of the free spot or -1 if no free spot was fund
      */
     public int getFreeRowInColumn(int pColumn) {
+
+        // Check whether the column number is on the playing field.
         if (this.isValidColumnNumber(pColumn)) {
+
+            // Iterate over the rows from bottom to top and find first free spot.
             for (int row = numberOfRows - 1; row >= 0; row--) {
                 if (playingField[pColumn][row] == null) {
                     return row;
                 }
             }
+
+            // No free spot was found.
             return -1;
         } else {
             throw new IllegalArgumentException("Invalid column number provided while getting free row number!");
@@ -97,9 +109,10 @@ public class PlayingFieldModel {
     }
 
     /**
-     * Get the playing field as a string.
+     * Get the playing field as a string. The string looks similar to this:
+     * [PlayerName, -, ] [ -, -, PlayerName]
      *
-     * @return
+     * @return The playing field.
      */
     public String toString() {
         String returnString = "";
