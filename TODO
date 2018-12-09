@@ -1,8 +1,3 @@
-- gameLogic
-    - drop Method call network to send drop
-    - setMark method to answer call from network client
-    - remove playing field model from client and only to server
 - network client
-    - drop method send to server
-    - receive dropped message and call game logic
+    - Implement drop error handling.
 
