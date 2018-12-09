@@ -25,7 +25,7 @@ public class PlayerNamesDisplay {
     private int playerTextXStart = 500;
     private int playerTextYStart = 150;
 
-    private int activePlayerIndicatorXOffset = -35;
+    private int activePlayerIndicatorXOffset = -35; // The amount the player indicator is moved to the right in respect to the player name texts.
     private int activePlayerIndicatorSize = 10;
 
     private Circle activePlayerIndicator;
