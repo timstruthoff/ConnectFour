@@ -3,6 +3,7 @@ package ConnectFour.client;
 import EgJavaLib2.egSas.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class GameWindow extends SasApp {
@@ -40,6 +41,16 @@ public class GameWindow extends SasApp {
 
     public String askForPlayerName() {
         return (String) JOptionPane.showInputDialog(null, "What is your name?", "", JOptionPane.QUESTION_MESSAGE, null, null, "");
+    }
+
+    /**
+     * Show an error dialog window. The method blocks the main thread until the
+     * user clicks on confirm.
+     *
+     * @param pErrorMessage The error message to be shown to the user.
+     */
+    public void showErrorMessage(String pErrorMessage) {
+        JOptionPane.showMessageDialog(new JFrame(), pErrorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public void drawArrows() {

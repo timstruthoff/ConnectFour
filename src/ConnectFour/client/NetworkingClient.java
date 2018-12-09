@@ -48,31 +48,38 @@ public class NetworkingClient extends Client {
 
         System.out.println("\\\\ Server to client " + id + ":" + newline + "\\\\ " + pMessage);
 
-        List<String> messageParts = Arrays.asList(pMessage.split(" "));
-        String command = messageParts.get(0);
-        List<String> parameters = messageParts.subList(1, messageParts.size());
+        // Check if message is an error message
+        if (pMessage.startsWith("ERR")) {
+            this.onError(pMessage.replace("ERR ", ""));
+        } else {
 
-        switch (command) {
-            case "OK":
-                break;
-            case "START":
-                this.onStart();
-                break;
-            case "NEWENEMY":
-                this.onNewPlayer(parameters.get(0));
-                break;
-            case "TURN":
-                this.onTurn(parameters.get(0));
-                break;
-            case "DROPPED":
-                this.onDropped(parameters);
-                break;
-            case "END":
-                this.onEnd(parameters.get(0));
-                break;
-            default:
-                break;
+            List<String> messageParts = Arrays.asList(pMessage.split(" "));
+            String command = messageParts.get(0);
+            List<String> parameters = messageParts.subList(1, messageParts.size());
+
+            switch (command) {
+                case "OK":
+                    break;
+                case "START":
+                    this.onStart();
+                    break;
+                case "NEWENEMY":
+                    this.onNewPlayer(parameters.get(0));
+                    break;
+                case "TURN":
+                    this.onTurn(parameters.get(0));
+                    break;
+                case "DROPPED":
+                    this.onDropped(parameters);
+                    break;
+                case "END":
+                    this.onEnd(parameters.get(0));
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
     public void onNewPlayer(String pName) {
@@ -107,6 +114,19 @@ public class NetworkingClient extends Client {
 
         System.out.println(Arrays.toString(p.toArray()));
         System.out.println("Name: " + playerName + " column: " + column + " row: " + row);
+    }
+
+    /**
+     * Handle error messages sent by the server.
+     *
+     * @param pErrorMessage The error message
+     */
+    public void onError(String pErrorMessage) {
+
+        if (pErrorMessage.equals("Name already taken!")) {
+            this.gameLogic.onInvalidPlayerName(pErrorMessage);
+            System.out.println("Error: " + pErrorMessage);
+        }
     }
 
     public void onEnd(String pWinner) {

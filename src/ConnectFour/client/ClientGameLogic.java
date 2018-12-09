@@ -38,6 +38,20 @@ public class ClientGameLogic {
     }
 
     /**
+     * Handle that the name which was previously sent to the server was rejected
+     * because it was invalid.
+     *
+     * @param pErrorMessage The error with which the name was rejected
+     */
+    public void onInvalidPlayerName(String pErrorMessage) {
+        window.showErrorMessage(pErrorMessage);
+
+        // Ask for player name and then send it to the server.
+        myName = window.askForPlayerName();
+        client.sendPlayerName(myName);
+    }
+
+    /**
      * Gets the color of a player.
      *
      * @param pPlayerName A player name.
